@@ -71,3 +71,133 @@ This repository contains useful scripts for data analysis in bioinformatics, inc
 - [BLDB: Beta-Lactamase DataBase](http://www.bldb.eu/)
 - [Bacterial Taxonomy Database LPSN - List of Prokaryotic names with Standing in Nomenclature](https://lpsn.dsmz.de/)
 - [INTEGRALL:The Integron Database](http://integrall.bio.ua.pt/?links)
+
+
+# 📁 Scripts de Bioinformática - Renomeação e Ambientes Conda
+
+## 🐍 renomear_fastq_pasta(pasta)
+```python
+import os
+import re
+
+def renomear_fastq_pasta(pasta):
+    for nome_arquivo in os.listdir(pasta):
+        if nome_arquivo.endswith('.fastq.gz'):
+            partes = nome_arquivo.split("_")
+            novo_nome = f"{partes[0]}_{partes[-1]}"
+            os.rename(os.path.join(pasta, nome_arquivo), os.path.join(pasta, novo_nome))
+```
+
+### ✅ O que faz:
+Renomeia arquivos `.fastq.gz`, mantendo apenas o **primeiro** e o **último** bloco do nome separados por underline (`_`).
+
+### 🔄 Exemplo:
+| Antes             | Depois           |
+|------------------|------------------|
+| N1_010_1.fastq.gz | N1_1.fastq.gz    |
+| S2_078_2.fastq.gz | S2_2.fastq.gz    |
+
+---
+
+## 🐚 Script Bash: Restaurar ambiente Conda do TORMES
+```bash
+#!/bin/bash
+
+echo "[INFO] Removendo ambiente antigo tormes-1.3.0 (se existir)..."
+conda deactivate
+conda env remove -n tormes-1.3.0 -y
+
+echo "[INFO] Restaurando ambiente TORMES a partir do backup..."
+conda env create -f tormes-1.3.0_backup.yml
+
+echo "[INFO] Ambiente TORMES restaurado com sucesso!"
+echo "Use: conda activate tormes-1.3.0"
+```
+
+### ✅ O que faz:
+1. Desativa o ambiente Conda atual.
+2. Remove o ambiente `tormes-1.3.0`, se existir.
+3. Restaura a partir do arquivo `tormes-1.3.0_backup.yml`.
+
+---
+
+## 🐳 Dockerfile: Ambiente Conda para TORMES
+```dockerfile
+FROM continuumio/miniconda3:4.10.3
+
+COPY tormes-1.3.0_backup.yml /tmp/tormes-1.3.0_backup.yml
+RUN conda env create -f /tmp/tormes-1.3.0_backup.yml
+SHELL ["/bin/bash", "-c"]
+RUN echo "conda activate tormes-1.3.0" >> ~/.bashrc
+ENV PATH /opt/conda/envs/tormes-1.3.0/bin:$PATH
+ENTRYPOINT ["/bin/bash"]
+```
+
+### ✅ O que faz:
+Cria uma imagem Docker com o ambiente `tormes-1.3.0` restaurado e ativado.
+
+---
+
+## 🐍 renomear_fasta_pasta(pasta)
+```python
+import os
+
+def renomear_fasta_pasta(pasta):
+    for nome_arquivo in os.listdir(pasta):
+        if nome_arquivo.endswith('.fasta'):
+            partes = nome_arquivo.split("_")
+            novo_nome = f"{partes[0]}.fasta"
+            caminho_antigo = os.path.join(pasta, nome_arquivo)
+            caminho_novo = os.path.join(pasta, novo_nome)
+            if os.path.exists(caminho_novo):
+                print(f"[Aviso] Arquivo {caminho_novo} já existe! Pulando {nome_arquivo}.")
+            else:
+                os.rename(caminho_antigo, caminho_novo)
+                print(f"{nome_arquivo} renomeado para {novo_nome}")
+```
+
+### ✅ O que faz:
+Renomeia arquivos `.fasta`, mantendo **apenas o primeiro campo** antes do `_` como nome do arquivo.
+
+### 🔄 Exemplo:
+| Antes                                     | Depois         |
+|-------------------------------------------|----------------|
+| HSP1_001_Klebsiella pneumoniae.fasta      | HSP1.fasta     |
+| HGPE_045_Acinetobacter baumannii.fasta    | HGPE.fasta     |
+
+---
+
+## 🧬 separar_contigs_por_isolado(fasta_path, output_dir)
+```python
+from Bio import SeqIO
+from collections import defaultdict
+import os
+import re
+
+def separar_contigs_por_isolado(fasta_path, output_dir):
+    isolados = defaultdict(list)
+    for record in SeqIO.parse(fasta_path, "fasta"):
+        match = re.search(r"(S\d+_\d+|N\d+_\d+|T\d+_\d+)", record.description)
+        if match:
+            isolados[match.group()].append(record)
+
+    os.makedirs(output_dir, exist_ok=True)
+    for isolado, contigs in isolados.items():
+        with open(os.path.join(output_dir, f"{isolado}.fasta"), "w") as out_f:
+            SeqIO.write(contigs, out_f, "fasta")
+```
+
+### ✅ O que faz:
+Separa contigs de um arquivo multi-FASTA em arquivos separados para cada isolado com identificador do tipo `S10_005`, `N3_007`, etc.
+
+### 🔄 Exemplo:
+#### Entrada:
+```
+>... S10_005 ...
+>... S10_005 ...
+>... N3_007 ...
+```
+#### Saída:
+- `S10_005.fasta` com 2 contigs
+- `N3_007.fasta` com 1 contig
+
