@@ -38,7 +38,7 @@ This repository contains useful scripts for data analysis in bioinformatics, inc
 - [Stock Solution Calculator](https://goldbio.com/stock-solution-calculator)
 - [LabHacks Lab.hacks Your Personal Lab Assistant - Mobile App](https://labhacks.net/)
 - [Compare EUROPE: Laboratory Operating Procedures (LOPs) or Standard Operating Procedures (SOPs)](https://www.compare-europe.eu/library/protocols-and-sops.)
--[ShareBiology Buffers and Solutions Preparation Guides](https://sharebiology.com/)
+- [ShareBiology Buffers and Solutions Preparation Guides](https://sharebiology.com/)
 ---
 
 ## 🧬 Pipelines WGS - Bacterial AMR
@@ -56,6 +56,7 @@ This repository contains useful scripts for data analysis in bioinformatics, inc
 - [Center for Genomic Epidemiology](https://genomicepidemiology.org/services/)
 - [Kaptive - Klebsiella pneumoniae and Acinetobacter baumannii surface polysaccharide loci reports](https://github.com/klebgenomics/Kaptive)
 - [Kleborate:screening genome assemblies of Klebsiella pneumoniae and the Klebsiella pneumoniae species complex (KpSC)](https://github.com/klebgenomics/Kleborate)
+- [phandango: interactive tool to allow visualisation of a phylogenetic tree](https://github.com/jameshadfield/phandango)
 
   ## Web-based platforms for AMR analysis and reporting:
 - [Proksee: in-depth characterization and visualization of bacterial genomes](https://proksee.ca/)
