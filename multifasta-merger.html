@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MultiFASTA Merger</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 40px;
+      background-color: #f2f2f2;
+    }
+    h1 { color: #2c3e50; }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+    textarea {
+      width: 100%;
+      height: 400px;
+      margin-top: 10px;
+      font-family: monospace;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>🔗 MultiFASTA Merger</h1>
+  <p>Selecione múltiplos arquivos <code>.fasta</code> para gerar um único arquivo <strong>multiFASTA</strong>.</p>
+  <input type="file" id="fastaFiles" multiple accept=".fasta,.fa,.fna">
+  <button onclick="mergeFastas()">Gerar MultiFASTA</button>
+  <button onclick="downloadFasta()">⬇️ Baixar MultiFASTA</button>
+  <textarea id="outputFasta" placeholder="Resultado aparecerá aqui..."></textarea>
+</div>
+
+<script>
+function mergeFastas() {
+  const files = document.getElementById('fastaFiles').files;
+  const output = document.getElementById('outputFasta');
+  output.value = '';
+  if (!files.length) {
+    alert('Selecione ao menos um arquivo FASTA.');
+    return;
+  }
+
+  const readerPromises = Array.from(files).map(file => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.readAsText(file);
+    });
+  });
+
+  Promise.all(readerPromises).then(contents => {
+    output.value = contents.join('\n');
+  });
+}
+
+function downloadFasta() {
+  const text = document.getElementById('outputFasta').value;
+  const blob = new Blob([text], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'multiFasta_merged.fasta';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
