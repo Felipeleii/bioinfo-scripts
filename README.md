@@ -43,6 +43,7 @@ This repository contains useful scripts for data analysis in bioinformatics, inc
 
 ## 🧬 Pipelines WGS - Bacterial AMR
 
+- [Bactopia](https://bactopia.github.io/latest/)_
 - [AbritAMR](https://github.com/MDU-PHL/abritamr)
 - [Grenepipe (Wiki)](https://github.com/moiexpositoalonsolab/grenepipe/wiki)  
 - [rMAP](https://github.com/GunzIvan28/rMAP)
