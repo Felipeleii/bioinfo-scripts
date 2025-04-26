@@ -39,6 +39,7 @@ This repository contains useful scripts for data analysis in bioinformatics, inc
 - [LabHacks Lab.hacks Your Personal Lab Assistant - Mobile App](https://labhacks.net/)
 - [Compare EUROPE: Laboratory Operating Procedures (LOPs) or Standard Operating Procedures (SOPs)](https://www.compare-europe.eu/library/protocols-and-sops.)
 - [ShareBiology Buffers and Solutions Preparation Guides](https://sharebiology.com/)
+- [Convertcase - Online converter](https://convertcase.net/)
 ---
 
 ## 🧬 Pipelines WGS - Bacterial AMR
