@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Utilitários Bioinfo: Spreadsheet/YAML & multiFASTA</title>
+  <style>
+    body { font-family: sans-serif; background: #f5f6fa; }
+    .container { max-width: 800px; margin: 32px auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 32px #2223; padding: 2.5rem; }
+    h1 { font-size: 2rem; margin-bottom: .4em; }
+    .tabs { display: flex; gap: 1em; margin-bottom: 2em; }
+    .tab-btn { padding: 0.7em 2em; border: none; border-radius: 10px 10px 0 0; background: #e9ecef; font-weight: bold; font-size: 1em; cursor: pointer; color: #333; }
+    .tab-btn.active { background: #3886fa; color: #fff; }
+    label { font-weight: bold; margin-top: 1.2em; display: block; }
+    textarea, select, input[type=text] { width: 100%; font-size: 1rem; border-radius: 7px; border: 1px solid #bbb; padding: 8px; margin-bottom: 1em; box-sizing: border-box; }
+    .row { display: flex; gap: 1em; align-items: center; margin-bottom: 1em; }
+    .output { background: #f4f4f6; font-family: monospace; min-height: 80px; }
+    button.gen { background: #3886fa; color: #fff; padding: 0.6em 1.5em; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; }
+    button.gen:hover { background: #1458a6; }
+    .tip { font-size: 0.93em; color: #444a; margin-top: 1em; }
+    .footer { margin-top: 2.2em; font-size: 0.95em; color: #aaa; text-align: center; }
+    @media (max-width:650px){ .container{padding:0.8em;} .tabs{flex-direction:column;} }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Utilitários Bioinfo</h1>
+  <div class="tabs">
+    <button class="tab-btn active" id="tab1-btn" onclick="showTab(1)">Spreadsheet/YAML</button>
+    <button class="tab-btn" id="tab2-btn" onclick="showTab(2)">multiFASTA</button>
+  </div>
+  <div id="tab1" style="display:block">
+    <label for="input">Cole a saída do <code>ls</code> ou <code>dir</code> (um arquivo por linha):</label>
+    <textarea id="input" rows="7" placeholder="Exemplo:\nHGG-001-KPN_1.fastq.gz\nHGG-001-KPN_2.fastq.gz\n..."></textarea>
+    <div class="row">
+      <label for="pattern">Extensão/Padrão do par:</label>
+      <input type="text" id="pattern" value="_1.fastq.gz">
+      <span class="tip">Ex: _1.fastq.gz, _R1_001.fastq.gz</span>
+    </div>
+    <div class="row">
+      <label for="format">Formato:</label>
+      <select id="format">
+        <option value="bactopia">Bactopia (TSV)</option>
+        <option value="rmap">rMAP (TSV)</option>
+        <option value="yaml">Bacannot/ZDB (YAML)</option>
+      </select>
+      <button class="gen" onclick="generateOutput()">Gerar</button>
+    </div>
+    <label for="output">Saída:</label>
+    <textarea id="output" class="output" rows="7" readonly></textarea>
+    <div class="tip">
+      Cole a lista dos arquivos (<code>ls *.fastq.gz</code>), ajustando o padrão se necessário.<br>
+      O nome dos samples será extraído automaticamente.<br>
+    </div>
+  </div>
+  <div id="tab2" style="display:none">
+    <label for="fasta-in">Cole as sequências no formato FASTA:</label>
+    <textarea id="fasta-in" rows="10" placeholder=">sample1\nATGCGT...\n>sample2\nCTAGC..."></textarea>
+    <button class="gen" onclick="generateFasta()">Gerar multiFASTA</button>
+    <label for="fasta-out" style="margin-top:1em">multiFASTA:</label>
+    <textarea id="fasta-out" class="output" rows="10" readonly></textarea>
+    <div class="tip">
+      Cole as sequências com headers (&gt;amostra) e sequência na linha seguinte.<br>
+      Qualquer espaço/enter extra será removido.
+    </div>
+  </div>
+  <div class="footer">
+    Desenvolvido por <a href="https://github.com/felipeleii">Felipe Lei</a> &bull; <a href="https://felipeleii.github.io/bioinfo-scripts/">bioinfo-scripts</a>
+  </div>
+</div>
+<script>
+function showTab(n) {
+  document.getElementById('tab1').style.display = n===1?'block':'none';
+  document.getElementById('tab2').style.display = n===2?'block':'none';
+  document.getElementById('tab1-btn').classList.toggle('active', n===1);
+  document.getElementById('tab2-btn').classList.toggle('active', n===2);
+}
+function parseFiles(input, pattern) {
+  const lines = input.trim().split('\n').map(l=>l.trim()).filter(Boolean);
+  const samples = {};
+  lines.forEach(line => {
+    let name = line.split(/[\/\\]/).pop();
+    let id = name.replace(pattern, "");
+    if(!samples[id]) samples[id] = {};
+    if (name.match(/(R1|_1)(_|\.|$)/i)) samples[id]["r1"] = line;
+    else if (name.match(/(R2|_2)(_|\.|$)/i)) samples[id]["r2"] = line;
+  });
+  return samples;
+}
+function toBactopia(samples) {
+  let out = "sample\tr1\tr2\n";
+  Object.entries(samples).forEach(([id, reads]) => {
+    out += `${id}\t${reads.r1||''}\t${reads.r2||''}\n`;
+  });
+  return out;
+}
+function toRmap(samples) {
+  let out = "sample\tforward\treverse\n";
+  Object.entries(samples).forEach(([id, reads]) => {
+    out += `${id}\t${reads.r1||''}\t${reads.r2||''}\n`;
+  });
+  return out;
+}
+function toYaml(samples) {
+  let out = "samples:\n";
+  Object.entries(samples).forEach(([id, reads]) => {
+    out += `  ${id}:\n    r1: ${reads.r1||''}\n    r2: ${reads.r2||''}\n`;
+  });
+  return out;
+}
+function generateOutput() {
+  const input = document.getElementById('input').value;
+  const pattern = document.getElementById('pattern').value;
+  const format = document.getElementById('format').value;
+  const samples = parseFiles(input, pattern);
+  let output = '';
+  if(format==="bactopia") output = toBactopia(samples);
+  else if(format==="rmap") output = toRmap(samples);
+  else if(format==="yaml") output = toYaml(samples);
+  document.getElementById('output').value = output;
+}
+function generateFasta() {
+  const input = document.getElementById('fasta-in').value;
+  const lines = input.split(/\r?\n/);
+  let out = "";
+  let seq = "";
+  let header = "";
+  lines.forEach(line => {
+    if (line.startsWith(">")) {
+      if (header && seq) out += header + "\n" + seq.replace(/\s+/g,"") + "\n";
+      header = line;
+      seq = "";
+    } else {
+      seq += line.trim();
+    }
+  });
+  if (header && seq) out += header + "\n" + seq.replace(/\s+/g,"") + "\n";
+  document.getElementById('fasta-out').value = out;
+}
+</script>
+</body>
+</html>
