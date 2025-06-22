@@ -1,4 +1,376 @@
-<!-- Quick Start -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bioinfo Scripts v2.0 - Ferramentas de Bioinformática</title>
+    <meta name="description" content="Coleção de scripts otimizados para análise de dados de bioinformática - WGS bacteriano, pipelines e automação">
+    <meta name="keywords" content="bioinformática, WGS, bacterial genomics, FASTQ, FASTA, Bactopia, Python">
+    
+    <!-- CSS Frameworks -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #7c3aed;
+            --accent-color: #06b6d4;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .glass-effect {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .code-block {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .code-block:hover .copy-button {
+            opacity: 1;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .typing-effect {
+            border-right: 2px solid var(--accent-color);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+
+        /* Dark theme */
+        .dark {
+            background-color: var(--dark-bg);
+            color: #f8fafc;
+        }
+
+        .dark .card-bg {
+            background-color: var(--card-bg);
+        }
+
+        /* Progress bar animation */
+        .progress-bar {
+            animation: progress 2s ease-in-out;
+        }
+
+        @keyframes progress {
+            from { width: 0%; }
+        }
+
+        /* Scroll animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Additional Styles */
+        .nav-link {
+            @apply text-gray-700 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 transition-colors;
+        }
+
+        .btn-primary {
+            @apply bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 inline-flex items-center;
+        }
+
+        .btn-secondary {
+            @apply bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 inline-flex items-center;
+        }
+
+        .btn-sm {
+            @apply px-3 py-1 rounded text-sm font-medium transition-colors;
+        }
+
+        .tag {
+            @apply bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded text-xs;
+        }
+
+        .tab-btn {
+            @apply px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 border-b-2 border-transparent hover:border-blue-300 transition-colors mr-4 mb-2;
+        }
+
+        .tab-btn.active {
+            @apply text-blue-600 dark:text-blue-400 border-blue-500;
+        }
+
+        .example-tab {
+            @apply px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 border-b-2 border-transparent hover:border-blue-300 transition-colors mr-4;
+        }
+
+        .example-tab.active {
+            @apply text-blue-600 dark:text-blue-400 border-blue-500;
+        }
+
+        .download-item {
+            @apply w-full flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors border border-gray-200 dark:border-gray-600;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .gradient-bg h1 {
+                font-size: 3rem;
+            }
+            .gradient-bg h1 span {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-effect">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-dna text-3xl text-blue-500"></i>
+                    <span class="text-xl font-bold">Bioinfo Scripts v2.0</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#home" class="nav-link">Início</a>
+                    <a href="#tools" class="nav-link">Ferramentas</a>
+                    <a href="#documentation" class="nav-link">Documentação</a>
+                    <a href="#download" class="nav-link">Download</a>
+                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:inline"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
+                <a href="#home" class="block py-2">Início</a>
+                <a href="#tools" class="block py-2">Ferramentas</a>
+                <a href="#documentation" class="block py-2">Documentação</a>
+                <a href="#download" class="block py-2">Download</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center gradient-bg text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="animate-float absolute top-20 left-10">
+                <i class="fas fa-virus text-6xl"></i>
+            </div>
+            <div class="animate-float absolute top-40 right-20" style="animation-delay: -2s;">
+                <i class="fas fa-microscope text-8xl"></i>
+            </div>
+            <div class="animate-float absolute bottom-20 left-1/4" style="animation-delay: -4s;">
+                <i class="fas fa-dna text-7xl"></i>
+            </div>
+        </div>
+
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <h1 class="text-6xl md:text-8xl font-bold mb-6 fade-in-up">
+                Bioinfo Scripts
+                <span class="block text-4xl md:text-5xl text-cyan-300 mt-2">v2.0</span>
+            </h1>
+            
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto fade-in-up">
+                Coleção <strong>otimizada</strong> de scripts para análise de dados de bioinformática.
+                <br>Focado em <strong>WGS bacteriano</strong>, pipelines automatizados e gestão eficiente de dados.
+            </p>
+
+            <div class="flex flex-col md:flex-row gap-4 justify-center items-center mb-12 fade-in-up">
+                <a href="#tools" class="btn-primary group">
+                    <i class="fas fa-tools mr-2"></i>
+                    Explorar Ferramentas
+                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="https://github.com/Felipeleii/bioinfo-scripts" class="btn-secondary group" target="_blank">
+                    <i class="fab fa-github mr-2"></i>
+                    Ver no GitHub
+                    <i class="fas fa-external-link-alt ml-2 group-hover:scale-110 transition-transform"></i>
+                </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto fade-in-up">
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-cyan-300" data-count="15">0</div>
+                    <div class="text-sm opacity-80">Scripts</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-cyan-300" data-count="5">0</div>
+                    <div class="text-sm opacity-80">Categorias</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-cyan-300" data-count="100">0</div>
+                    <div class="text-sm opacity-80">% Python</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-cyan-300" data-count="24">0</div>
+                    <div class="text-sm opacity-80">Commits</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i class="fas fa-chevron-down text-2xl opacity-70"></i>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section id="tools" class="py-20 bg-white dark:bg-gray-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Ferramentas Disponíveis</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                    Scripts otimizados com interface moderna, validação robusta e documentação completa
+                </p>
+            </div>
+
+            <!-- Category Tabs -->
+            <div class="flex flex-wrap justify-center mb-12 fade-in-up">
+                <button class="tab-btn active" data-category="all">
+                    <i class="fas fa-th-large mr-2"></i>Todas
+                </button>
+                <button class="tab-btn" data-category="file_management">
+                    <i class="fas fa-folder-open mr-2"></i>Gestão de Arquivos
+                </button>
+                <button class="tab-btn" data-category="sequence_analysis">
+                    <i class="fas fa-dna mr-2"></i>Análise de Sequências
+                </button>
+                <button class="tab-btn" data-category="pipeline">
+                    <i class="fas fa-cogs mr-2"></i>Pipelines
+                </button>
+            </div>
+
+            <!-- Tools Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 fade-in-up">
+                <!-- FASTQ Renamer -->
+                <div class="tool-card" data-category="file_management">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 card-hover h-full">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-file-archive text-blue-600 dark:text-blue-400 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold">FASTQ Renamer</h3>
+                                <div class="flex items-center">
+                                    <span class="pulse-dot w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                    <span class="text-sm text-green-600">Otimizado</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
+                            Renomeia arquivos FASTQ com padrões inteligentes. Suporte a busca recursiva, backup automático e validação.
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="tag">Python 3.8+</span>
+                            <span class="tag">CLI</span>
+                            <span class="tag">Logging</span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-semibold mb-2">Funcionalidades:</h4>
+                            <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Lista todas as ferramentas por categoria</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Execução unificada de scripts</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Setup automático de dependências</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Configuração de ambiente</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="flex gap-2">
+                            <button class="btn-sm btn-primary" onclick="showCodeExample('tools_manager')">
+                                <i class="fas fa-code mr-1"></i>Exemplo
+                            </button>
+                            <button class="btn-sm btn-secondary" onclick="downloadScript('bioinfo_manager.py')">
+                                <i class="fas fa-download mr-1"></i>Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documentation Section -->
+    <section id="documentation" class="py-20 bg-gray-50 dark:bg-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Documentação</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                    Guias completos, exemplos práticos e melhores práticas para usar as ferramentas
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 fade-in-up">
+                <!-- Quick Start -->
                 <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8">
                     <h3 class="text-2xl font-bold mb-6 flex items-center">
                         <i class="fas fa-rocket text-blue-500 mr-3"></i>
@@ -233,7 +605,7 @@ python bactopia_gui.py</code></pre>
                                class="block w-full bg-white text-blue-600 py-3 px-6 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
                                 <i class="fab fa-github mr-2"></i>Download ZIP
                             </a>
-                            <a href="https://github.com/Felipeleii/bioinfo-scripts.git" 
+                            <a href="#" onclick="copyToClipboard(this, 'git clone https://github.com/Felipeleii/bioinfo-scripts.git')"
                                class="block w-full bg-black bg-opacity-20 py-3 px-6 rounded-lg font-semibold hover:bg-opacity-30 transition-colors">
                                 <i class="fas fa-code-branch mr-2"></i>Git Clone
                             </a>
@@ -535,310 +907,460 @@ python bactopia_gui.py</code></pre>
                     current = target;
                     clearInterval(timer);
                 }
-                element<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bioinfo Scripts v2.0 - Ferramentas de Bioinformática</title>
-    <meta name="description" content="Coleção de scripts otimizados para análise de dados de bioinformática - WGS bacteriano, pipelines e automação">
-    <meta name="keywords" content="bioinformática, WGS, bacterial genomics, FASTQ, FASTA, Bactopia, Python">
-    
-    <!-- CSS Frameworks -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary-color: #2563eb;
-            --secondary-color: #7c3aed;
-            --accent-color: #06b6d4;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --error-color: #ef4444;
-            --dark-bg: #0f172a;
-            --card-bg: #1e293b;
+                element.textContent = Math.floor(current);
+            }, 16);
         }
 
-        .gradient-bg {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        }
+        // Intersection Observer for Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
-        .glass-effect {
-            backdrop-filter: blur(16px);
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Animate counters
+                    const counters = entry.target.querySelectorAll('[data-count]');
+                    counters.forEach(counter => {
+                        if (!counter.classList.contains('animated')) {
+                            counter.classList.add('animated');
+                            animateCounter(counter);
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
 
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        // Observe elements
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            observer.observe(el);
+        });
 
-        .card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-        }
+        // Code Examples
+        const codeExamples = {
+            fastq_renamer: {
+                title: 'FASTQ Renamer - Exemplo Completo',
+                content: `
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Uso Básico</h4>
+                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
+                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python fastq_renamer.py /dados/fastq --pattern first_last')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <pre><code># Renomeia mantendo primeiro e último campo
+python fastq_renamer.py /dados/fastq --pattern first_last
 
-        .animate-float {
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .code-block {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .copy-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .code-block:hover .copy-button {
-            opacity: 1;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .pulse-dot {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .typing-effect {
-            border-right: 2px solid var(--accent-color);
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            50% { border-color: transparent; }
-        }
-
-        /* Dark theme */
-        .dark {
-            background-color: var(--dark-bg);
-            color: #f8fafc;
-        }
-
-        .dark .card-bg {
-            background-color: var(--card-bg);
-        }
-
-        /* Progress bar animation */
-        .progress-bar {
-            animation: progress 2s ease-in-out;
-        }
-
-        @keyframes progress {
-            from { width: 0%; }
-        }
-
-        /* Scroll animations */
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
-        }
-
-        .fade-in-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
-</head>
-
-<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 glass-effect">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-dna text-3xl text-blue-500"></i>
-                    <span class="text-xl font-bold">Bioinfo Scripts v2.0</span>
-                </div>
-                
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="#home" class="nav-link">Início</a>
-                    <a href="#tools" class="nav-link">Ferramentas</a>
-                    <a href="#documentation" class="nav-link">Documentação</a>
-                    <a href="#download" class="nav-link">Download</a>
-                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-                        <i class="fas fa-moon dark:hidden"></i>
-                        <i class="fas fa-sun hidden dark:inline"></i>
-                    </button>
-                </div>
-
-                <!-- Mobile menu button -->
-                <button id="mobile-menu-btn" class="md:hidden p-2">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-
-            <!-- Mobile menu -->
-            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
-                <a href="#home" class="block py-2">Início</a>
-                <a href="#tools" class="block py-2">Ferramentas</a>
-                <a href="#documentation" class="block py-2">Documentação</a>
-                <a href="#download" class="block py-2">Download</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section id="home" class="min-h-screen flex items-center gradient-bg text-white relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10">
-            <div class="animate-float absolute top-20 left-10">
-                <i class="fas fa-virus text-6xl"></i>
-            </div>
-            <div class="animate-float absolute top-40 right-20" style="animation-delay: -2s;">
-                <i class="fas fa-microscope text-8xl"></i>
-            </div>
-            <div class="animate-float absolute bottom-20 left-1/4" style="animation-delay: -4s;">
-                <i class="fas fa-dna text-7xl"></i>
-            </div>
-        </div>
-
-        <div class="container mx-auto px-6 text-center relative z-10">
-            <h1 class="text-6xl md:text-8xl font-bold mb-6 fade-in-up">
-                Bioinfo Scripts
-                <span class="block text-4xl md:text-5xl text-cyan-300 mt-2">v2.0</span>
-            </h1>
-            
-            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto fade-in-up">
-                Coleção <strong>otimizada</strong> de scripts para análise de dados de bioinformática.
-                <br>Focado em <strong>WGS bacteriano</strong>, pipelines automatizados e gestão eficiente de dados.
-            </p>
-
-            <div class="flex flex-col md:flex-row gap-4 justify-center items-center mb-12 fade-in-up">
-                <a href="#tools" class="btn-primary group">
-                    <i class="fas fa-tools mr-2"></i>
-                    Explorar Ferramentas
-                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                <a href="https://github.com/Felipeleii/bioinfo-scripts" class="btn-secondary group" target="_blank">
-                    <i class="fab fa-github mr-2"></i>
-                    Ver no GitHub
-                    <i class="fas fa-external-link-alt ml-2 group-hover:scale-110 transition-transform"></i>
-                </a>
-            </div>
-
-            <!-- Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto fade-in-up">
-                <div class="text-center">
-                    <div class="text-3xl font-bold text-cyan-300" data-count="15">0</div>
-                    <div class="text-sm opacity-80">Scripts</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl font-bold text-cyan-300" data-count="5">0</div>
-                    <div class="text-sm opacity-80">Categorias</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl font-bold text-cyan-300" data-count="100">0</div>
-                    <div class="text-sm opacity-80">% Python</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl font-bold text-cyan-300" data-count="24">0</div>
-                    <div class="text-sm opacity-80">Commits</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Scroll indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <i class="fas fa-chevron-down text-2xl opacity-70"></i>
-        </div>
-    </section>
-
-    <!-- Documentation Section -->
-    <section id="documentation" class="py-20 bg-gray-50 dark:bg-gray-800">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16 fade-in-up">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">Documentação</h2>
-                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-                    Guias completos, exemplos práticos e melhores práticas para usar as ferramentas
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 fade-in-up">
-                <!-- Quick Start -->
-                <div class="bg-
-
-    <!-- Tools Section -->
-    <section id="tools" class="py-20 bg-white dark:bg-gray-900">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16 fade-in-up">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">Ferramentas Disponíveis</h2>
-                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-                    Scripts otimizados com interface moderna, validação robusta e documentação completa
-                </p>
-            </div>
-
-            <!-- Category Tabs -->
-            <div class="flex flex-wrap justify-center mb-12 fade-in-up">
-                <button class="tab-btn active" data-category="all">
-                    <i class="fas fa-th-large mr-2"></i>Todas
-                </button>
-                <button class="tab-btn" data-category="file_management">
-                    <i class="fas fa-folder-open mr-2"></i>Gestão de Arquivos
-                </button>
-                <button class="tab-btn" data-category="sequence_analysis">
-                    <i class="fas fa-dna mr-2"></i>Análise de Sequências
-                </button>
-                <button class="tab-btn" data-category="pipeline">
-                    <i class="fas fa-cogs mr-2"></i>Pipelines
-                </button>
-            </div>
-
-            <!-- Tools Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 fade-in-up">
-                <!-- FASTQ Renamer -->
-                <div class="tool-card" data-category="file_management">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 card-hover h-full">
-                        <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="fas fa-file-archive text-blue-600 dark:text-blue-400 text-xl"></i>
+# Exemplo de conversão:
+# N1_010_1.fastq.gz → N1_1.fastq.gz
+# S2_078_2.fastq.gz → S2_2.fastq.gz</code></pre>
                             </div>
-                            <div>
-                                <h3 class="text-xl font-bold">FASTQ Renamer</h3>
-                                <div class="flex items-center">
-                                    <span class="pulse-dot w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                                    <span class="text-sm text-green-600">Otimizado</span>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Opções Avançadas</h4>
+                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
+                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python fastq_renamer.py /dados/fastq --recursive --backup --dry-run --verbose')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <pre><code># Busca recursiva com backup e modo teste
+python fastq_renamer.py /dados/fastq \\
+    --recursive \\
+    --backup \\
+    --dry-run \\
+    --verbose
+
+# Padrão alternativo (apenas primeiro campo)
+python fastq_renamer.py /dados/fastq --pattern first_only</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Parâmetros Disponíveis</h4>
+                            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                                <table class="w-full text-sm">
+                                    <tr><td class="font-mono text-blue-600">--pattern</td><td>first_last | first_only</td></tr>
+                                    <tr><td class="font-mono text-blue-600">--recursive</td><td>Busca em subdiretórios</td></tr>
+                                    <tr><td class="font-mono text-blue-600">--backup</td><td>Cria backup dos nomes originais</td></tr>
+                                    <tr><td class="font-mono text-blue-600">--dry-run</td><td>Simula operações sem executar</td></tr>
+                                    <tr><td class="font-mono text-blue-600">--verbose</td><td>Saída detalhada</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            fasta_renamer: {
+                title: 'FASTA Renamer - Exemplo Completo',
+                content: `
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Diferentes Padrões</h4>
+                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
+                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python fasta_renamer.py /dados/fasta --pattern first_only')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <pre><code># Padrão first_only
+python fasta_renamer.py /dados/fasta --pattern first_only
+# HSP1_001_Klebsiella_pneumoniae.fasta → HSP1.fasta
+
+# Padrão first_two  
+python fasta_renamer.py /dados/fasta --pattern first_two
+# HSP1_001_Klebsiella_pneumoniae.fasta → HSP1_001.fasta
+
+# Padrão species_format
+python fasta_renamer.py /dados/fasta --pattern species_format
+# HSP1_001_Klebsiella_pneumoniae.fasta → HSP1_001.fasta</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Gerenciamento de Conflitos</h4>
+                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
+                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python fasta_renamer.py /dados/fasta --backup --force')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <pre><code># Com backup e força para sobrescrever
+python fasta_renamer.py /dados/fasta --backup --force
+
+# Verificar conflitos antes de executar
+python fasta_renamer.py /dados/fasta --dry-run
+
+# Adicionar sufixo customizado
+python fasta_renamer.py /dados/fasta --custom-suffix "_processed"</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            contig_separator: {
+                title: 'Contig Separator - Exemplo Completo',
+                content: `
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Separação Básica</h4>
+                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
+                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python contig_separator.py assembly.fasta output_dir/')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <pre><code># Separar contigs automaticamente
+python contig_separator.py assembly.fasta output_dir/
+
+# Análise apenas (sem separar)
+python contig_separator.py assembly.fasta output_dir/ --analyze-only</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Filtros e Padrões Customizados</h4>
+                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
+                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python contig_separator.py assembly.fasta output_dir/ --min-length 500 --max-length 10000')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <pre><code># Com filtros de tamanho
+python contig_separator.py assembly.fasta output_dir/ \\
+    --min-length 500 \\
+    --max-length 10000
+
+# Padrão regex customizado
+python contig_separator.py assembly.fasta output_dir/ \\
+    --custom-pattern "(isolado_\\d+)"
+
+# Saída em formato GenBank
+python contig_separator.py assembly.fasta output_dir/ \\
+    --output-format genbank</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Padrões de ID Suportados</h4>
+                            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                                <ul class="space-y-2 text-sm">
+                                    <li><strong>Standard:</strong> S10_005, N3_007, T15_002</li>
+                                    <li><strong>Extended:</strong> HSP1_001, HGPE_045</li>
+                                    <li><strong>Simple:</strong> S10, N3, T15</li>
+                                    <li><strong>Custom:</strong> isolado1, sample_001</li>
+                                    <li><strong>Generic:</strong> qualquer letra + números</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            bactopia_gui: {
+                title: 'Bactopia GUI - Interface Completa',
+                content: `
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Instalação e Execução</h4>
+                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
+                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'pip install pandas\\nsudo apt install python3-tk\\npython bactopia_gui.py')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <pre><code># Instalar dependências
+pip install pandas
+sudo apt install python3-tk  # Ubuntu/Debian
+
+# Executar GUI
+python bactopia_gui.py</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Funcionalidades da Interface</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg">
+                                    <h5 class="font-semibold text-blue-800 dark:text-blue-200 mb-2">Aba Configuração</h5>
+                                    <ul class="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+                                        <li>• Seleção de diretórios</li>
+                                        <li>• Configuração de espécies</li>
+                                        <li>• Recursos computacionais</li>
+                                        <li>• Opções de execução</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="bg-green-50 dark:bg-green-900 p-4 rounded-lg">
+                                    <h5 class="font-semibold text-green-800 dark:text-green-200 mb-2">Aba Amostras</h5>
+                                    <ul class="text-sm text-green-700 dark:text-green-300 space-y-1">
+                                        <li>• Auto-detecção paired-end</li>
+                                        <li>• Edição manual de amostras</li>
+                                        <li>• Exportação para CSV</li>
+                                        <li>• Validação de arquivos</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="bg-purple-50 dark:bg-purple-900 p-4 rounded-lg">
+                                    <h5 class="font-semibold text-purple-800 dark:text-purple-200 mb-2">Aba Execução</h5>
+                                    <ul class="text-sm text-purple-700 dark:text-purple-300 space-y-1">
+                                        <li>• Geração automática de comandos</li>
+                                        <li>• Execução direta do Bactopia</li>
+                                        <li>• Monitoramento de progresso</li>
+                                        <li>• Controle de processos</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="bg-orange-50 dark:bg-orange-900 p-4 rounded-lg">
+                                    <h5 class="font-semibold text-orange-800 dark:text-orange-200 mb-2">Aba Log</h5>
+                                    <ul class="text-sm text-orange-700 dark:text-orange-300 space-y-1">
+                                        <li>• Log em tempo real</li>
+                                        <li>• Histórico de operações</li>
+                                        <li>• Exportação de logs</li>
+                                        <li>• Diagnóstico de erros</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                         
-                        <p class="text-gray-600 dark:text-gray-300 mb-4">
-                            Renomeia arquivos FASTQ com padrões inteligentes. Suporte a busca recursiva, backup automático e validação.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="tag">Python 3.8+</span>
-                            <span class="tag">CLI</span>
-                            <span class="tag">Logging</span>
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Fluxo de Trabalho Típico</h4>
+                            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                                <ol class="space-y-2 text-sm">
+                                    <li><strong>1.</strong> Selecionar diretório com arquivos FASTQ</li>
+                                    <li><strong>2.</strong> Configurar espécie e tamanho do genoma</li>
+                                    <li><strong>3.</strong> Escanear e validar amostras</li>
+                                    <li><strong>4.</strong> Gerar arquivo metadata.txt</li>
+                                    <li><strong>5.</strong> Executar Bactopia automaticamente</li>
+                                    <li><strong>6.</strong> Monitorar progresso via log</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            tools_manager: {
+                title: 'Tools Manager - Sistema Centralizado',
+                content: `
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Comandos Principais</h4>
+                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
+                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python bioinfo_manager.py setup\\npython bioinfo_manager.py list\\npython bioinfo_manager.py run fastq_renamer --help')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <pre><code># Configurar ambiente inicial
+python bioinfo_manager.py setup
+
+# Listar todas as ferramentas
+python bioinfo_manager.py list
+
+# Listar por categoria
+python bioinfo_manager.py list --category file_management
+
+# Executar ferramenta
+python bioinfo_manager.py run fastq_renamer /dados --dry-run
+
+# Ver ajuda de ferramenta específica
+python bioinfo_manager.py help contig_separator</code></pre>
+                            </div>
                         </div>
                         
-                        <div class="mb-4">
-                            <h4 class="font-semibold mb-2">Funcionalidades:</h4>
-                            <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Padrões first_last e first_only</li>
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Setup Automático</h4>
+                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
+                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python bioinfo_manager.py setup')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <pre><code># O comando setup automaticamente:
+# ✓ Verifica versão do Python
+# ✓ Instala dependências Python
+# ✓ Verifica ferramentas externas (Docker, Nextflow)
+# ✓ Cria estrutura de diretórios
+# ✓ Gera arquivo de configuração
+
+python bioinfo_manager.py setup</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Categorias de Ferramentas</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-blue-50 dark:bg-blue-900 p-3 rounded">
+                                    <h5 class="font-semibold text-blue-800 dark:text-blue-200">file_management</h5>
+                                    <p class="text-sm text-blue-600 dark:text-blue-300">Gestão e renomeação de arquivos</p>
+                                </div>
+                                <div class="bg-green-50 dark:bg-green-900 p-3 rounded">
+                                    <h5 class="font-semibold text-green-800 dark:text-green-200">sequence_analysis</h5>
+                                    <p class="text-sm text-green-600 dark:text-green-300">Análise e processamento de sequências</p>
+                                </div>
+                                <div class="bg-purple-50 dark:bg-purple-900 p-3 rounded">
+                                    <h5 class="font-semibold text-purple-800 dark:text-purple-200">pipeline</h5>
+                                    <p class="text-sm text-purple-600 dark:text-purple-300">Pipelines e workflows automatizados</p>
+                                </div>
+                                <div class="bg-orange-50 dark:bg-orange-900 p-3 rounded">
+                                    <h5 class="font-semibold text-orange-800 dark:text-orange-200">quality_control</h5>
+                                    <p class="text-sm text-orange-600 dark:text-orange-300">Controle de qualidade de dados</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            assembly_renamer: {
+                title: 'Assembly Renamer - Renomeação Especializada',
+                content: `
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">PowerShell (Windows)</h4>
+                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
+                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, '.\\\\assembly_renamer.ps1')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <pre><code># Executar script PowerShell
+.\\assembly_renamer.ps1
+
+# O script automaticamente:
+# - Processa todas as pastas com padrão "Staphylococcus aureus amostra X"
+# - Extrai número da amostra (trata casos como 16.1, 115_, 18denovo)
+# - Formata com 3 dígitos (008, 016, 115)
+# - Copia para K:\\FASTAs_Renomeados\\SA_XXX.fasta</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Bash (WSL/Linux)</h4>
+                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
+                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'chmod +x assembly_renamer.sh\\n./assembly_renamer.sh')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <pre><code># Tornar executável e executar
+chmod +x assembly_renamer.sh
+./assembly_renamer.sh
+
+# Caminhos ajustados para WSL:
+# /mnt/k/downloads/SA (origem)
+# /mnt/k/FASTAs_Renomeados (destino)</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-lg font-semibold mb-3">Exemplos de Conversão</h4>
+                            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                                <table class="w-full text-sm">
+                                    <thead>
+                                        <tr class="border-b border-gray-300 dark:border-gray-600">
+                                            <th class="text-left py-2">Pasta Original</th>
+                                            <th class="text-left py-2">Arquivo Final</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="space-y-1">
+                                        <tr><td class="py-1">Staphylococcus aureus amostra 08</td><td class="py-1">SA_008.fasta</td></tr>
+                                        <tr><td class="py-1">Staphylococcus aureus amostra 16.1</td><td class="py-1">SA_161.fasta</td></tr>
+                                        <tr><td class="py-1">Staphylococcus aureus amostra 115_</td><td class="py-1">SA_115.fasta</td></tr>
+                                        <tr><td class="py-1">Staphylococcus aureus amostra18denovo</td><td class="py-1">SA_018.fasta</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        // Show Code Example Modal
+        function showCodeExample(toolId) {
+            const modal = document.getElementById('code-modal');
+            const title = document.getElementById('modal-title');
+            const content = document.getElementById('modal-content');
+            
+            if (codeExamples[toolId]) {
+                title.textContent = codeExamples[toolId].title;
+                content.innerHTML = codeExamples[toolId].content;
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // Close Modal
+        function closeModal() {
+            const modal = document.getElementById('code-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Download Script
+        function downloadScript(filename) {
+            // Simulate download - in real implementation, this would link to actual files
+            const baseUrl = 'https://raw.githubusercontent.com/Felipeleii/bioinfo-scripts/main/';
+            const link = document.createElement('a');
+            link.href = baseUrl + filename;
+            link.download = filename;
+            link.target = '_blank';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('code-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'code-modal') {
+                closeModal();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Trigger initial fade-in animations
+            setTimeout(() => {
+                document.querySelectorAll('.fade-in-up').forEach(el => {
+                    if (el.getBoundingClientRect().top < window.innerHeight) {
+                        el.classList.add('visible');
+                    }
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>="fas fa-check text-green-500 mr-2"></i>Padrões first_last e first_only</li>
                                 <li><i class="fas fa-check text-green-500 mr-2"></i>Modo dry-run para testes</li>
                                 <li><i class="fas fa-check text-green-500 mr-2"></i>Backup automático</li>
                                 <li><i class="fas fa-check text-green-500 mr-2"></i>Busca recursiva</li>
@@ -1072,23 +1594,4 @@ python bactopia_gui.py</code></pre>
                         <div class="mb-4">
                             <h4 class="font-semibold mb-2">Funcionalidades:</h4>
                             <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Lista todas as ferramentas por categoria</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Execução unificada de scripts</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Setup automático de dependências</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Configuração de ambiente</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="flex gap-2">
-                            <button class="btn-sm btn-primary" onclick="showCodeExample('tools_manager')">
-                                <i class="fas fa-code mr-1"></i>Exemplo
-                            </button>
-                            <button class="btn-sm btn-secondary" onclick="downloadScript('bioinfo_manager.py')">
-                                <i class="fas fa-download mr-1"></i>Download
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                                <li><i class
