@@ -5,21 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bioinfo Scripts v3.0 - Ferramentas de Bioinformática</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    main, section, form, input, textarea, select, button {
-    position: relative;
-    z-index: 1;
-}
     <style>
+        main, section, form, input, textarea, select, button {
+            position: relative;
+            z-index: 1;
+        }
         :root {
-            --primary-color: #2E7D32;
+            /* Cores principais */
+            --primary-color: #4CAF50;
             --secondary-color: #1976D2;
             --accent-color: #F57C00;
+            --color-primary-dark: #388E3C; /* Adicione esta linha */
+
+            /* Cores de fundo */
             --dark-bg: #121212;
             --card-bg: #1E1E1E;
+
+            /* Cores de texto */
             --text-primary: #FFFFFF;
             --text-secondary: #B0B0B0;
+
+            /* Cores de estado */
             --success-color: #4CAF50;
             --error-color: #F44336;
+
+            /* Cores de utilidade */
             --border-color: #333333;
         }
 
@@ -39,14 +49,13 @@
 
         /* Header Styles */
         header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: var(--primary-color);
             padding: 1rem 0;
             box-shadow: 0 2px 10px rgba(0,0,0,0.3);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            backdrop-filter: blur(10px);
         }
 
         nav {
@@ -78,24 +87,13 @@
         .nav-links a {
             color: var(--text-primary);
             text-decoration: none;
-            transition: all 0.3s ease;
             position: relative;
             padding: 0.5rem 0;
         }
 
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--accent-color);
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
+        .nav-links a:hover {
+            text-decoration: underline;
+            color: var(--accent-color);
         }
 
         /* Mobile Menu */
@@ -137,37 +135,15 @@
         .hero {
             text-align: center;
             padding: 4rem 0;
-            background: linear-gradient(135deg, rgba(46,125,50,0.1), rgba(25,118,210,0.1));
+            background: rgba(46,125,50,0.1);
             border-radius: 20px;
             margin-bottom: 3rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
-            opacity: 0.03;
-            animation: pulse 4s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
         }
 
         .hero h1 {
             font-size: 3rem;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--primary-color);
         }
 
         .hero p {
@@ -198,30 +174,10 @@
             padding: 2rem;
             margin-bottom: 2rem;
             border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.05));
-            transform: translateX(-100%);
-            transition: transform 0.5s ease;
-        }
-
-        .card:hover::before {
-            transform: translateX(0);
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-color: var(--secondary-color);
         }
 
         .card h3 {
@@ -253,7 +209,6 @@
             border-radius: 8px;
             color: var(--text-primary);
             font-size: 1rem;
-            transition: all 0.3s ease;
         }
 
         input[type="text"]:focus,
@@ -262,7 +217,6 @@
         select:focus {
             outline: none;
             border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(25,118,210,0.2);
         }
 
         textarea {
@@ -273,47 +227,32 @@
         /* Button Styles */
         .btn {
             padding: 0.75rem 2rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: var(--primary-color);
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.2);
-            transition: left 0.3s ease;
-        }
-
-        .btn:hover::before {
-            left: 0;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: var(--color-primary-dark);
         }
 
         .btn:active {
-            transform: translateY(0);
+            opacity: 0.9;
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, var(--accent-color), #FF8F00);
+            background: var(--accent-color);
+        }
+
+        .btn-secondary:hover {
+            background: #E65100;
         }
 
         /* Tool Grid */
@@ -329,7 +268,6 @@
             border-radius: 15px;
             padding: 1.5rem;
             border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
             cursor: pointer;
             text-decoration: none;
             color: inherit;
@@ -337,8 +275,6 @@
         }
 
         .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             border-color: var(--secondary-color);
         }
 
@@ -373,21 +309,19 @@
             overflow-y: auto;
         }
 
-        /* Loading Spinner */
+        /* Loading Indicator */
         .spinner {
             display: none;
             width: 50px;
             height: 50px;
             border: 3px solid var(--border-color);
-            border-top: 3px solid var(--secondary-color);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
             margin: 2rem auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            text-align: center;
+            line-height: 50px;
+            font-weight: bold;
+            font-size: 10px;
+            color: var(--secondary-color);
         }
 
         /* Footer */
@@ -438,22 +372,12 @@
             cursor: pointer;
             font-size: 1rem;
             font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
         }
 
         .tab.active {
             color: var(--secondary-color);
-        }
-
-        .tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--secondary-color);
+            background-color: rgba(25, 118, 210, 0.1);
+            border-radius: 8px 8px 0 0;
         }
 
         .tab-content {
@@ -497,10 +421,9 @@
 
         .progress-bar {
             height: 20px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            background: var(--primary-color);
             border-radius: 7px;
             width: 0%;
-            transition: width 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -509,9 +432,9 @@
             font-weight: 600;
         }
 
-        /* Smooth Scrolling */
+        /* Scrolling */
         html {
-            scroll-behavior: smooth;
+            scroll-behavior: auto;
         }
 
         /* Section Navigation */
@@ -531,13 +454,11 @@
             height: 12px;
             border-radius: 50%;
             background: var(--border-color);
-            transition: all 0.3s ease;
         }
 
         .section-nav a.active,
         .section-nav a:hover {
             background: var(--secondary-color);
-            transform: scale(1.5);
         }
 
         @media (max-width: 1024px) {
@@ -545,1065 +466,469 @@
                 display: none;
             }
         }
+
+        input, textarea, select, button {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .form-checkbox-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <nav>
-            <a href="#" class="logo">
-                <i class="fas fa-dna"></i>
-                Bioinfo Scripts v3.0
+<!-- Header -->
+<header>
+    <nav>
+        <a href="#" class="logo">
+            <i class="fas fa-dna"></i>
+            Bioinfo Scripts v3.0
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Início</a></li>
+            <li><a href="#tools">Ferramentas</a></li>
+            <li><a href="#multifasta">MultiFASTA</a></li>
+            <li><a href="#bactopia">Bactopia</a></li>
+            <li><a href="#scripts">Scripts</a></li>
+            <li><a href="instalacao_dependencias.html">Instalação</a></li>
+            <li><a href="#about">Sobre</a></li>
+            <li><a href="https://github.com/Felipeleii/bioinfo-scripts" target="_blank"><i class="fab fa-github"></i></a></li>
+        </ul>
+        <div class="mobile-menu" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+</header>
+
+<!-- Section Navigation -->
+<div class="section-nav">
+    <a href="#home" class="active" aria-label="Seção Inicial"></a>
+    <a href="#tools"></a>
+    <a href="#multifasta"></a>
+    <a href="#bactopia"></a>
+    <a href="#scripts"></a>
+    <a href="#about"></a>
+</div>
+
+<!-- Main Content -->
+<main>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <h1>Bioinfo Scripts v3.0</h1>
+        <p>Ferramentas avançadas de bioinformática para análise de genomas bacterianos e sequenciamento Illumina</p>
+    </section>
+
+    <!-- Tools Section -->
+    <section id="tools" class="section">
+        <h2 class="section-title">
+            <i class="fas fa-tools"></i>
+            Ferramentas Principais
+        </h2>
+        <div class="tools-grid">
+            <a href="#multifasta" class="tool-card">
+                <i class="fas fa-file-alt tool-icon"></i>
+                <h3 class="tool-title">Gerador MultiFASTA</h3>
+                <p class="tool-description">Crie arquivos multiFASTA com rastreamento automático de origem das sequências</p>
             </a>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#home">Início</a></li>
-                <li><a href="#tools">Ferramentas</a></li>
-                <li><a href="#multifasta">MultiFASTA</a></li>
-                <li><a href="#bactopia">Bactopia</a></li>
-                <li><a href="#scripts">Scripts</a></li>
-                <li><a href="#about">Sobre</a></li>
-                <li><a href="https://github.com/Felipeleii/bioinfo-scripts" target="_blank"><i class="fab fa-github"></i></a></li>
-            </ul>
-            <div class="mobile-menu" onclick="toggleMenu()">
-                <i class="fas fa-bars"></i>
-            </div>
-        </nav>
-    </header>
+            <a href="#bactopia" class="tool-card">
+                <i class="fas fa-bacteria tool-icon"></i>
+                <h3 class="tool-title">Bactopia Prepare GUI</h3>
+                <p class="tool-description">Interface gráfica para preparação de dados do pipeline Bactopia</p>
+            </a>
+            <a href="#fastq-stats" class="tool-card">
+                <i class="fas fa-chart-line tool-icon"></i>
+                <h3 class="tool-title">FASTQ Stats Calculator</h3>
+                <p class="tool-description">Calcule estatísticas básicas de arquivos FASTQ (reads, qualidade, GC%)</p>
+            </a>
+            <a href="#primer-design" class="tool-card">
+                <i class="fas fa-dna tool-icon"></i>
+                <h3 class="tool-title">Primer Designer</h3>
+                <p class="tool-description">Desenhe primers para PCR com análise de Tm e estruturas secundárias</p>
+            </a>
+            <a href="#genome-stats" class="tool-card">
+                <i class="fas fa-chart-bar tool-icon"></i>
+                <h3 class="tool-title">Genome Statistics</h3>
+                <p class="tool-description">Calcule N50, tamanho do genoma, número de contigs e outras métricas</p>
+            </a>
+            <a href="#mlst-tool" class="tool-card">
+                <i class="fas fa-fingerprint tool-icon"></i>
+                <h3 class="tool-title">MLST Analyzer</h3>
+                <p class="tool-description">Análise de Multi-Locus Sequence Typing para tipagem bacteriana</p>
+            </a>
+        </div>
+    </section>
 
-    <!-- Section Navigation -->
-    <div class="section-nav">
-        <a href="#home" class="active"></a>
-        <a href="#tools"></a>
-        <a href="#multifasta"></a>
-        <a href="#bactopia"></a>
-        <a href="#scripts"></a>
-        <a href="#about"></a>
-    </div>
-
-    <!-- Main Content -->
-    <main>
-        <!-- Hero Section -->
-        <section id="home" class="hero">
-            <h1>Bioinfo Scripts v3.0</h1>
-            <p>Ferramentas avançadas de bioinformática para análise de genomas bacterianos e sequenciamento Illumina</p>
-        </section>
-
-        <!-- Tools Section -->
-        <section id="tools" class="section">
+    <!-- MultiFASTA Generator Section -->
+    <section id="multifasta" class="section">
+        <div class="card">
             <h2 class="section-title">
-                <i class="fas fa-tools"></i>
-                Ferramentas Principais
+                <i class="fas fa-file-alt"></i>
+                Gerador de Arquivos MultiFASTA Adaptado
             </h2>
-            <div class="tools-grid">
-                <a href="#multifasta" class="tool-card">
-                    <i class="fas fa-file-alt tool-icon"></i>
-                    <h3 class="tool-title">Gerador MultiFASTA</h3>
-                    <p class="tool-description">Crie arquivos multiFASTA com rastreamento automático de origem das sequências</p>
-                </a>
-                <a href="#bactopia" class="tool-card">
-                    <i class="fas fa-bacteria tool-icon"></i>
-                    <h3 class="tool-title">Bactopia Prepare GUI</h3>
-                    <p class="tool-description">Interface gráfica para preparação de dados do pipeline Bactopia</p>
-                </a>
-                <a href="#fastq-stats" class="tool-card">
-                    <i class="fas fa-chart-line tool-icon"></i>
-                    <h3 class="tool-title">FASTQ Stats Calculator</h3>
-                    <p class="tool-description">Calcule estatísticas básicas de arquivos FASTQ (reads, qualidade, GC%)</p>
-                </a>
-                <a href="#primer-design" class="tool-card">
-                    <i class="fas fa-dna tool-icon"></i>
-                    <h3 class="tool-title">Primer Designer</h3>
-                    <p class="tool-description">Desenhe primers para PCR com análise de Tm e estruturas secundárias</p>
-                </a>
-                <a href="#genome-stats" class="tool-card">
-                    <i class="fas fa-chart-bar tool-icon"></i>
-                    <h3 class="tool-title">Genome Statistics</h3>
-                    <p class="tool-description">Calcule N50, tamanho do genoma, número de contigs e outras métricas</p>
-                </a>
-                <a href="#mlst-tool" class="tool-card">
-                    <i class="fas fa-fingerprint tool-icon"></i>
-                    <h3 class="tool-title">MLST Analyzer</h3>
-                    <p class="tool-description">Análise de Multi-Locus Sequence Typing para tipagem bacteriana</p>
-                </a>
+            <p>Esta ferramenta permite criar arquivos multiFASTA onde o nome do arquivo de origem é automaticamente incorporado ao cabeçalho de cada contig, facilitando o rastreamento da amostra de origem.</p>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('single', this)">Arquivo Único</button>
+                <button class="tab" onclick="switchTab('batch', this)">Lote de Arquivos</button>
             </div>
-        </section>
 
-        <!-- MultiFASTA Generator Section -->
-        <section id="multifasta" class="section">
-            <div class="card">
-                <h2 class="section-title">
-                    <i class="fas fa-file-alt"></i>
-                    Gerador de Arquivos MultiFASTA Adaptado
-                </h2>
-                <p>Esta ferramenta permite criar arquivos multiFASTA onde o nome do arquivo de origem é automaticamente incorporado ao cabeçalho de cada contig, facilitando o rastreamento da amostra de origem.</p>
-                
-                <div class="tabs">
-                    <button class="tab active" onclick="switchTab('single', this)">Arquivo Único</button>
-                    <button class="tab" onclick="switchTab('batch', this)">Lote de Arquivos</button>
-                </div>
-
-                <div id="single" class="tab-content active">
-                    <form id="singleFastaForm">
-                        <div class="form-group">
-                            <label for="fastaFile">Arquivo FASTA:</label>
-                            <input type="file" id="fastaFile" accept=".fasta,.fa,.fna" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="samplePrefix">Prefixo da Amostra (opcional):</label>
-                            <input type="text" id="samplePrefix" placeholder="Ex: Sample001">
-                        </div>
-                        <button type="submit" class="btn">
-                            <i class="fas fa-magic"></i>
-                            Processar FASTA
-                        </button>
-                    </form>
-                </div>
-
-                <div id="batch" class="tab-content">
-                    <form id="batchFastaForm">
-                        <div class="form-group">
-                            <label for="fastaFiles">Arquivos FASTA (múltiplos):</label>
-                            <input type="file" id="fastaFiles" accept=".fasta,.fa,.fna" multiple required>
-                        </div>
-                        <div class="form-group">
-                            <label for="mergeOption">Opção de Mesclagem:</label>
-                            <select id="mergeOption">
-                                <option value="separate">Manter arquivos separados</option>
-                                <option value="merge">Mesclar em um único arquivo</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn">
-                            <i class="fas fa-layer-group"></i>
-                            Processar Lote
-                        </button>
-                    </form>
-                </div>
-
-                <div class="progress-container" id="fastaProgress">
-                    <div class="progress-bar" id="fastaProgressBar">0%</div>
-                </div>
-
-                <div id="fastaOutput" class="output-area" style="display: none;">
-                    <!-- Output will be displayed here -->
-                </div>
-
-                <div id="fastaActions" style="display: none; margin-top: 1rem;">
-                    <button class="btn btn-secondary" onclick="downloadFasta()">
-                        <i class="fas fa-download"></i>
-                        Baixar Resultado
-                    </button>
-                    <button class="btn" onclick="copyToClipboard('fastaOutput')">
-                        <i class="fas fa-copy"></i>
-                        Copiar para Área de Transferência
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Bactopia Prepare GUI Section -->
-        <section id="bactopia" class="section">
-            <div class="card">
-                <h2 class="section-title">
-                    <i class="fas fa-bacteria"></i>
-                    Bactopia Prepare GUI
-                </h2>
-                <p>Interface gráfica intuitiva para preparar dados de entrada para o pipeline Bactopia. Organize seus arquivos FASTQ e metadados facilmente.</p>
-
-                <form id="bactopiaForm">
+            <div id="single" class="tab-content active">
+                <form id="singleFastaForm">
                     <div class="form-group">
-                        <label for="projectName">Nome do Projeto:</label>
-                        <input type="text" id="projectName" required placeholder="Ex: Ecoli_WGS_2024">
+                        <label for="fastaFile">Arquivo FASTA:</label>
+                        <input type="file" id="fastaFile" accept=".fasta,.fa,.fna" required>
                     </div>
-
                     <div class="form-group">
-                        <label for="fastqDir">Diretório dos arquivos FASTQ:</label>
-                        <input type="text" id="fastqDir" placeholder="/caminho/para/fastq" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="genome">Genoma de Referência (opcional):</label>
-                        <input type="file" id="genome" accept=".fasta,.fa,.fna">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="sampleSheet">Planilha de Amostras:</label>
-                        <textarea id="sampleSheet" placeholder="sample,fastq_1,fastq_2&#10;Sample1,sample1_R1.fastq.gz,sample1_R2.fastq.gz&#10;Sample2,sample2_R1.fastq.gz,sample2_R2.fastq.gz" rows="5"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="bactopiaParams">Parâmetros Adicionais:</label>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                            <label style="display: flex; align-items: center; gap: 0.5rem;">
-                                <input type="checkbox" id="qc" checked>
-                                <span>Controle de Qualidade</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 0.5rem;">
-                                <input type="checkbox" id="assembly" checked>
-                                <span>Montagem de Genoma</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 0.5rem;">
-                                <input type="checkbox" id="annotation" checked>
-                                <span>Anotação</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 0.5rem;">
-                                <input type="checkbox" id="mlst" checked>
-                                <span>MLST</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 0.5rem;">
-                                <input type="checkbox" id="amr" checked>
-                                <span>Resistência Antimicrobiana</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn">
-                        <i class="fas fa-cog"></i>
-                        Gerar Configuração Bactopia
-                    </button>
-                </form>
-
-                <div id="bactopiaOutput" class="output-area" style="display: none;">
-                    <!-- Bactopia configuration will be displayed here -->
-                </div>
-
-                <div id="bactopiaActions" style="display: none; margin-top: 1rem;">
-                    <button class="btn btn-secondary" onclick="downloadBactopiaConfig()">
-                        <i class="fas fa-download"></i>
-                        Baixar Configuração
-                    </button>
-                    <button class="btn" onclick="generateBactopiaCommand()">
-                        <i class="fas fa-terminal"></i>
-                        Gerar Comando
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- FASTQ Stats Calculator Section -->
-        <section id="fastq-stats" class="section">
-            <div class="card">
-                <h2 class="section-title">
-                    <i class="fas fa-chart-line"></i>
-                    FASTQ Statistics Calculator
-                </h2>
-                <p>Analise arquivos FASTQ e obtenha estatísticas detalhadas sobre suas sequências.</p>
-
-                <form id="fastqStatsForm">
-                    <div class="form-group">
-                        <label for="fastqFile">Arquivo FASTQ:</label>
-                        <input type="file" id="fastqFile" accept=".fastq,.fq,.fastq.gz" required>
+                        <label for="samplePrefix">Prefixo da Amostra (opcional):</label>
+                        <input type="text" id="samplePrefix" placeholder="Ex: Sample001">
                     </div>
                     <button type="submit" class="btn">
-                        <i class="fas fa-calculator"></i>
-                        Calcular Estatísticas
+                        <i class="fas fa-magic"></i>
+                        Processar FASTA
                     </button>
                 </form>
+            </div>
 
-                <div class="spinner" id="fastqSpinner"></div>
-
-                <div id="fastqStatsOutput" style="display: none;">
-                    <h3>Estatísticas do Arquivo:</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
-                        <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
-                            <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Total de Reads</h4>
-                            <p id="totalReads" style="font-size: 1.5rem; font-weight: bold;">-</p>
-                        </div>
-                        <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
-                            <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Total de Bases</h4>
-                            <p id="totalBases" style="font-size: 1.5rem; font-weight: bold;">-</p>
-                        </div>
-                        <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
-                            <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Comprimento Médio</h4>
-                            <p id="avgLength" style="font-size: 1.5rem; font-weight: bold;">-</p>
-                        </div>
-                        <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
-                            <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">GC Content (%)</h4>
-                            <p id="gcContent" style="font-size: 1.5rem; font-weight: bold;">-</p>
-                        </div>
-                        <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
-                            <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Qualidade Média</h4>
-                            <p id="avgQuality" style="font-size: 1.5rem; font-weight: bold;">-</p>
-                        </div>
-                        <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
-                            <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">N50</h4>
-                            <p id="n50" style="font-size: 1.5rem; font-weight: bold;">-</p>
-                        </div>
+            <div id="batch" class="tab-content">
+                <form id="batchFastaForm">
+                    <div class="form-group">
+                        <label for="fastaFiles">Arquivos FASTA (múltiplos):</label>
+                        <input type="file" id="fastaFiles" accept=".fasta,.fa,.fna" multiple required>
                     </div>
-
-                    <div style="margin-top: 2rem;">
-                        <h3>Distribuição de Comprimento de Reads</h3>
-                        <canvas id="lengthChart" style="max-height: 300px;"></canvas>
+                    <div class="form-group">
+                        <label for="mergeOption">Opção de Mesclagem:</label>
+                        <select id="mergeOption">
+                            <option value="separate">Manter arquivos separados</option>
+                            <option value="merge">Mesclar em um único arquivo</option>
+                        </select>
                     </div>
-
-                    <div style="margin-top: 2rem;">
-                        <h3>Distribuição de Qualidade</h3>
-                        <canvas id="qualityChart" style="max-height: 300px;"></canvas>
-                    </div>
-
-                    <button class="btn btn-secondary" onclick="downloadFastqReport()" style="margin-top: 1rem;">
-                        <i class="fas fa-download"></i>
-                        Baixar Relatório
+                    <button type="submit" class="btn">
+                        <i class="fas fa-layer-group"></i>
+                        Processar Lote
                     </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Scripts Section -->
-        <section id="scripts" class="section">
-            <h2 class="section-title">
-                <i class="fas fa-code"></i>
-                Scripts Úteis
-            </h2>
-
-            <div class="card">
-                <h3>Scripts de Análise de Qualidade</h3>
-                <ul style="list-style: none; padding-left: 0;">
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
-                        <strong>multiqc_report.py</strong> - Agregação de relatórios MultiQC
-                    </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
-                        <strong>trim_adapters.sh</strong> - Remoção de adaptadores com Trimmomatic
-                    </li>
-                </ul>
+                </form>
             </div>
 
-            <div class="card">
-                <h3>Scripts de Montagem</h3>
-                <ul style="list-style: none; padding-left: 0;">
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
-                        <strong>spades_assembly.sh</strong> - Montagem com SPAdes
-                    </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
-                        <strong>unicycler_hybrid.sh</strong> - Montagem híbrida Illumina + ONT
-                    </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
-                        <strong>assembly_stats.py</strong> - Estatísticas de montagem
-                    </li>
-                </ul>
+            <div class="progress-container" id="fastaProgress">
+                <div class="progress-bar" id="fastaProgressBar">0%</div>
             </div>
 
-            <div class="card">
-                <h3>Scripts de Anotação</h3>
-                <ul style="list-style: none; padding-left: 0;">
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
-                        <strong>prokka_batch.sh</strong> - Anotação em lote com Prokka
-                    </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
-                        <strong>bakta_annotate.sh</strong> - Anotação com Bakta
-                    </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
-                        <strong>extract_genes.py</strong> - Extração de genes específicos
-                    </li>
-                </ul>
+            <div id="fastaOutput" class="output-area" style="display: none;">
+                <!-- Output will be displayed here -->
             </div>
 
-            <div class="card">
-                <h3>Scripts de Análise Comparativa</h3>
-                <ul style="list-style: none; padding-left: 0;">
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
-                        <strong>ani_calculator.py</strong> - Cálculo de ANI (Average Nucleotide Identity)
-                    </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
-                        <strong>snp_analysis.sh</strong> - Análise de SNPs com snippy
-                    </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
-                        <strong>pangenome_roary.sh</strong> - Análise de pangenoma com Roary
-                    </li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" class="section">
-            <div class="card">
-                <h2 class="section-title">
-                    <i class="fas fa-info-circle"></i>
-                    Sobre o Projeto
-                </h2>
-                <p>O <strong>Bioinfo Scripts v3.0</strong> é uma coleção unificada de ferramentas e scripts para análise de genomas bacterianos, com foco especial em dados de sequenciamento Illumina.</p>
-                
-                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Características Principais:</h3>
-                <ul style="list-style: none; padding-left: 0;">
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-check" style="color: var(--success-color);"></i>
-                        Interface web intuitiva e responsiva
-                    </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-check" style="color: var(--success-color);"></i>
-                        Processamento de arquivos FASTA/FASTQ no navegador
-                    </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-check" style="color: var(--success-color);"></i>
-                        Integração com pipelines populares (Bactopia, Prokka, SPAdes)
-                    </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-check" style="color: var(--success-color);"></i>
-                        Scripts otimizados para análise de WGS bacteriano
-                    </li>
-                    <li style="margin-bottom: 0.5rem;">
-                        <i class="fas fa-check" style="color: var(--success-color);"></i>
-                        Documentação completa e exemplos práticos
-                    </li>
-                </ul>
-
-                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Instalação e Uso:</h3>
-                <div class="output-area">
-# Clone o repositório
-git clone https://github.com/Felipeleii/bioinfo-scripts.git
-cd bioinfo-scripts
-
-# Instale as dependências
-conda env create -f environment.yml
-conda activate bioinfo-scripts
-
-# Execute os scripts
-./scripts/run_analysis.sh
-                </div>
-
-                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Scripts Disponíveis para Download:</h3>
-                <div class="tools-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
-                    <div class="tool-card" style="padding: 1rem;">
-                        <i class="fas fa-download" style="color: var(--success-color);"></i>
-                        <h4 style="font-size: 1rem; margin: 0.5rem 0;">illumina_qc_pipeline.sh</h4>
-                        <p style="font-size: 0.85rem;">Pipeline completo de QC para dados Illumina</p>
-                    </div>
-                    <div class="tool-card" style="padding: 1rem;">
-                        <i class="fas fa-download" style="color: var(--success-color);"></i>
-                        <h4 style="font-size: 1rem; margin: 0.5rem 0;">bacterial_assembly.py</h4>
-                        <p style="font-size: 0.85rem;">Automatização de montagem com SPAdes/Unicycler</p>
-                    </div>
-                    <div class="tool-card" style="padding: 1rem;">
-                        <i class="fas fa-download" style="color: var(--success-color);"></i>
-                        <h4 style="font-size: 1rem; margin: 0.5rem 0;">multifasta_generator.py</h4>
-                        <p style="font-size: 0.85rem;">Versão CLI do gerador multiFASTA</p>
-                    </div>
-                    <div class="tool-card" style="padding: 1rem;">
-                        <i class="fas fa-download" style="color: var(--success-color);"></i>
-                        <h4 style="font-size: 1rem; margin: 0.5rem 0;">bactopia_helper.sh</h4>
-                        <p style="font-size: 0.85rem;">Scripts auxiliares para Bactopia</p>
-                    </div>
-                </div>
-
-                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Integração com GitHub Pages:</h3>
-                <div class="output-area">
-# 1. Fork ou clone o repositório
-git clone https://github.com/Felipeleii/bioinfo-scripts.git
-cd bioinfo-scripts
-
-# 2. Crie uma branch gh-pages
-git checkout -b gh-pages
-
-# 3. Adicione o arquivo index.html (este site)
-# Copie todo o conteúdo HTML para index.html
-
-# 4. Commit e push
-git add index.html
-git commit -m "Add unified bioinfo scripts website"
-git push origin gh-pages
-
-# 5. Ative GitHub Pages nas configurações do repositório
-# Settings → Pages → Source: gh-pages branch
-
-# Seu site estará disponível em:
-# https://felipeleii.github.io/bioinfo-scripts/
-                </div>
-
-                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Estrutura Recomendada do Repositório:</h3>
-                <div class="output-area">
-bioinfo-scripts/
-├── index.html              # Este arquivo (site principal)
-├── README.md               # Documentação do projeto
-├── LICENSE                 # Licença (MIT recomendada)
-├── environment.yml         # Dependências Conda
-├── requirements.txt        # Dependências Python
-│
-├── scripts/                # Scripts principais
-│   ├── quality_control/
-│   │   ├── fastq_qc.sh
-│   │   ├── multiqc_runner.py
-│   │   └── trim_adapters.sh
-│   │
-│   ├── assembly/
-│   │   ├── spades_assembly.sh
-│   │   ├── unicycler_hybrid.sh
-│   │   └── assembly_stats.py
-│   │
-│   ├── annotation/
-│   │   ├── prokka_batch.sh
-│   │   ├── bakta_annotate.sh
-│   │   └── extract_genes.py
-│   │
-│   └── utilities/
-│       ├── multifasta_generator.py
-│       ├── bactopia_prepare.py
-│       └── fastq_stats.py
-│
-├── examples/               # Arquivos de exemplo
-│   ├── sample_data/
-│   └── tutorials/
-│
-└── docs/                   # Documentação adicional
-    ├── installation.md
-    ├── usage_guide.md
-    └── troubleshooting.md
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <p>&copy; 2024 Bioinfo Scripts v3.0. Desenvolvido com <i class="fas fa-heart" style="color: var(--error-color);"></i> para a comunidade de bioinformática.</p>
-            <div class="social-links">
-                <a href="https://github.com/Felipeleii/bioinfo-scripts" target="_blank" title="GitHub">
-                    <i class="fab fa-github"></i>
-                </a>
-                <a href="#" title="Email">
-                    <i class="fas fa-envelope"></i>
-                </a>
-                <a href="#" title="Twitter">
-                    <i class="fab fa-twitter"></i>
-                </a>
+            <div id="fastaActions" style="display: none; margin-top: 1rem;">
+                <button class="btn btn-secondary" onclick="downloadFasta()">
+                    <i class="fas fa-download"></i>
+                    Baixar Resultado
+                </button>
+                <button class="btn" onclick="copyToClipboard('fastaOutput')">
+                    <i class="fas fa-copy"></i>
+                    Copiar para Área de Transferência
+                </button>
             </div>
         </div>
-    </footer>
+    </section>
 
-    <!-- JavaScript -->
-    <script>
-        // Mobile menu toggle
-        function toggleMenu() {
-            const navLinks = document.getElementById('navLinks');
-            navLinks.classList.toggle('active');
-        }
+    <!-- Bactopia Prepare GUI Section -->
+    <section id="bactopia" class="section">
+        <div class="card">
+            <h2 class="section-title">
+                <i class="fas fa-bacteria"></i>
+                Bactopia Prepare GUI
+            </h2>
+            <p>Interface gráfica intuitiva para preparar dados de entrada para o pipeline Bactopia. Organize seus arquivos FASTQ e metadados facilmente.</p>
 
-        // Tab switching
-        function switchTab(tabName, element) {
-            // Hide all tab contents
-            const tabContents = document.querySelectorAll('.tab-content');
-            tabContents.forEach(tab => tab.classList.remove('active'));
-            
-            // Remove active class from all tabs
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            
-            // Show selected tab content
-            document.getElementById(tabName).classList.add('active');
-            element.classList.add('active');
-        }
+            <form id="bactopiaForm">
+                <div class="form-group">
+                    <label for="projectName">Nome do Projeto:</label>
+                    <input type="text" id="projectName" required pattern="[A-Za-z0-9_]+" title="Somente letras, números e underscores são permitidos" placeholder="Ex: Ecoli_WGS_2024">
+                </div>
 
-        // MultiFASTA Generator Functions
-        document.getElementById('singleFastaForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const fileInput = document.getElementById('fastaFile');
-            const file = fileInput.files[0];
-            const prefix = document.getElementById('samplePrefix').value || file.name.replace(/\.[^/.]+$/, "");
-            
-            showProgress('fastaProgress');
-            
-            try {
-                const content = await readFile(file);
-                const processed = processFasta(content, prefix);
-                displayOutput('fastaOutput', processed);
-                showActions('fastaActions');
-                updateProgress('fastaProgressBar', 100);
-            } catch (error) {
-                showAlert('Erro ao processar arquivo: ' + error.message, 'error');
-            }
+                <div class="form-group">
+                    <label for="fastqDir">Diretório dos arquivos FASTQ:</label>
+                    <input type="text" id="fastqDir" placeholder="/caminho/para/fastq" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="genome">Genoma de Referência (opcional):</label>
+                    <input type="file" id="genome" accept=".fasta,.fa,.fna">
+                </div>
+
+                <div class="form-group">
+                    <label for="sampleSheet">Planilha de Amostras:</label>
+                    <textarea id="sampleSheet" placeholder="sample,fastq_1,fastq_2&#10;Sample1,sample1_R1.fastq.gz,sample1_R2.fastq.gz&#10;Sample2,sample2_R1.fastq.gz,sample2_R2.fastq.gz" rows="5"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="bactopiaParams">Parâmetros Adicionais:</label>
+                    <div class="form-checkbox-container">
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="qc" checked>
+                            <span>Controle de Qualidade</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="assembly" checked>
+                            <span>Montagem de Genoma</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="annotation" checked>
+                            <span>Anotação</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="mlst" checked>
+                            <span>MLST</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="amr" checked>
+                            <span>Resistência Antimicrobiana</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">
+                    <i class="fas fa-cog"></i>
+                    Gerar Configuração Bactopia
+                </button>
+            </form>
+
+            <div id="bactopiaOutput" class="output-area" style="display: none;">
+                <!-- Bactopia configuration will be displayed here -->
+            </div>
+
+            <div id="bactopiaActions" style="display: none; margin-top: 1rem;">
+                <button class="btn btn-secondary" onclick="downloadBactopiaConfig()">
+                    <i class="fas fa-download"></i>
+                    Baixar Configuração
+                </button>
+                <button class="btn" onclick="generateBactopiaCommand()">
+                    <i class="fas fa-terminal"></i>
+                    Gerar Comando
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FASTQ Stats Calculator Section -->
+    <section id="fastq-stats" class="section">
+        <div class="card">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i>
+                FASTQ Statistics Calculator
+            </h2>
+            <p>Analise arquivos FASTQ e obtenha estatísticas detalhadas sobre suas sequências.</p>
+
+            <form id="fastqStatsForm">
+                <div class="form-group">
+                    <label for="fastqFile">Arquivo FASTQ:</label>
+                    <input type="file" id="fastqFile" accept=".fastq,.fq,.fastq.gz" required>
+                </div>
+                <button type="submit" class="btn">
+                    <i class="fas fa-calculator"></i>
+                    Calcular Estatísticas
+                </button>
+            </form>
+
+            <div class="spinner" id="fastqSpinner"></div>
+
+            <div id="fastqStatsOutput" style="display: none;">
+                <h3>Estatísticas do Arquivo:</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Total de Reads</h4>
+                        <p id="totalReads" style="font-size: 1.5rem; font-weight: bold;">-</p>
+                    </div>
+                    <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Total de Bases</h4>
+                        <p id="totalBases" style="font-size: 1.5rem; font-weight: bold;">-</p>
+                    </div>
+                    <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Comprimento Médio</h4>
+                        <p id="avgLength" style="font-size: 1.5rem; font-weight: bold;">-</p>
+                    </div>
+                    <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">GC Content (%)</h4>
+                        <p id="gcContent" style="font-size: 1.5rem; font-weight: bold;">-</p>
+                    </div>
+                    <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Qualidade Média</h4>
+                        <p id="avgQuality" style="font-size: 1.5rem; font-weight: bold;">-</p>
+                    </div>
+                    <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">N50</h4>
+                        <p id="n50" style="font-size: 1.5rem; font-weight: bold;">-</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h3>Distribuição de Comprimento de Reads</h3>
+                    <canvas id="lengthChart" style="max-height: 300px;"></canvas>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h3>Distribuição de Qualidade</h3>
+                    <canvas id="qualityChart" style="max-height: 300px;"></canvas>
+                </div>
+
+                <button class="btn btn-secondary" onclick="downloadFastqReport()" style="margin-top: 1rem;">
+                    <i class="fas fa-download"></i>
+                    Baixar Relatório
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts Section -->
+    <section id="scripts" class="section">
+        <h2 class="section-title">
+            <i class="fas fa-code"></i>
+            Scripts Úteis
+        </h2>
+
+        <div class="card">
+            <h3>Scripts de Análise de Qualidade</h3>
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                    <strong>multiqc_report.py</strong> - Agregação de relatórios MultiQC
+                </li>
+                <li style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                    <strong>trim_adapters.sh</strong> - Remoção de adaptadores com Trimmomatic
+                </li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Scripts de Montagem</h3>
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                    <strong>spades_assembly.sh</strong> - Montagem com SPAdes
+                </li>
+                <li style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                    <strong>unicycler_hybrid.sh</strong> - Montagem híbrida Illumina + ONT
+                </li>
+                <li style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                    <strong>assembly_stats.py</strong> - Estatísticas de montagem
+                </li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Scripts de Anotação</h3>
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                    <strong>prokka_batch.sh</strong> - Anotação em lote com Prokka
+                </li>
+                <li style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                    <strong>bakta_annotate.sh</strong> - Anotação com Bakta
+                </li>
+                <li style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                    <strong>extract_genes.py</strong> - Extração de genes específicos
+                </li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Scripts de Análise Comparativa</h3>
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                    <strong>ani_calculator.py</strong> - Cálculo de ANI (Average Nucleotide Identity)
+                </li>
+                <li style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                    <strong>snp_analysis.sh</strong> - Análise de SNPs com snippy
+                </li>
+                <li style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                    <strong>pangenome_roary.sh</strong> - Análise de pangenoma com Roary
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="card">
+            <h2 class="section-title">
+                <i class="fas fa-info-circle"></i>
+                Sobre o Projeto
+            </h2>
+            <p>O <strong>Bioinfo Scripts v3.0</strong> é uma coleção unificada de ferramentas e scripts para análise de genomas bacterianos, com foco especial em dados de sequenciamento Illumina.</p>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Características Principais</h3>
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-check" style="color: var(--success-color);"></i>
+                    Interface gráfica intuitiva para bioinformáticos e microbiologistas
+                </li>
+                <li style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-check" style="color: var(--success-color);"></i>
+                    Processamento em lote para análises de alto rendimento
+                </li>
+                <li style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-check" style="color: var(--success-color);"></i>
+                    Integração com pipelines populares como Bactopia e Prokka
+                </li>
+                <li style="margin-bottom: 0.5rem;">
+                    <i class="fas fa-check" style="color: var(--success-color);"></i>
+                    Visualização de resultados diretamente no navegador
+                </li>
+            </ul>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2024 Bioinfo Scripts v3.0 - Ferramentas de Bioinformática</p>
+        <div class="social-links">
+            <a href="https://github.com/Felipeleii/bioinfo-scripts" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fas fa-envelope"></i></a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    function toggleMenu() {
+        const navLinks = document.getElementById('navLinks');
+        navLinks.classList.toggle('active');
+    }
+
+    function switchTab(tabId, button) {
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
         });
 
-        document.getElementById('batchFastaForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const filesInput = document.getElementById('fastaFiles');
-            const files = Array.from(filesInput.files);
-            const mergeOption = document.getElementById('mergeOption').value;
-            
-            showProgress('fastaProgress');
-            
-            try {
-                let allProcessed = [];
-                let currentProgress = 0;
-                const progressStep = 100 / files.length;
-                
-                for (const file of files) {
-                    const content = await readFile(file);
-                    const prefix = file.name.replace(/\.[^/.]+$/, "");
-                    const processed = processFasta(content, prefix);
-                    
-                    if (mergeOption === 'merge') {
-                        allProcessed.push(processed);
-                    } else {
-                        // Handle separate files - in a real implementation, you'd save each file
-                        allProcessed.push(`=== ${file.name} ===\n${processed}\n`);
-                    }
-                    
-                    currentProgress += progressStep;
-                    updateProgress('fastaProgressBar', Math.round(currentProgress));
-                }
-                
-                const finalOutput = allProcessed.join('\n');
-                displayOutput('fastaOutput', finalOutput);
-                showActions('fastaActions');
-            } catch (error) {
-                showAlert('Erro ao processar arquivos: ' + error.message, 'error');
-            }
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
         });
 
-        function processFasta(content, prefix) {
-            const lines = content.split('\n');
-            let processed = [];
-            let contigCounter = 1;
-            
-            for (let line of lines) {
-                if (line.startsWith('>')) {
-                    // Extract original contig name
-                    const originalName = line.substring(1).trim();
-                    // Create new header with sample prefix
-                    const newHeader = `>${prefix}_contig${contigCounter}_${originalName}`;
-                    processed.push(newHeader);
-                    contigCounter++;
-                } else {
-                    processed.push(line);
-                }
-            }
-            
-            return processed.join('\n');
-        }
+        // Show the selected tab content
+        document.getElementById(tabId).classList.add('active');
 
-        // Bactopia Prepare Functions
-        document.getElementById('bactopiaForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const projectName = document.getElementById('projectName').value;
-            const fastqDir = document.getElementById('fastqDir').value;
-            const sampleSheet = document.getElementById('sampleSheet').value;
-            
-            const config = generateBactopiaConfig({
-                projectName,
-                fastqDir,
-                sampleSheet,
-                qc: document.getElementById('qc').checked,
-                assembly: document.getElementById('assembly').checked,
-                annotation: document.getElementById('annotation').checked,
-                mlst: document.getElementById('mlst').checked,
-                amr: document.getElementById('amr').checked
-            });
-            
-            displayOutput('bactopiaOutput', config);
-            showActions('bactopiaActions');
+        // Add active class to the clicked button
+        button.classList.add('active');
+    }
+
+    function copyToClipboard(elementId) {
+        const text = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Copiado para a área de transferência!');
         });
-
-        function generateBactopiaConfig(params) {
-            let config = `# Bactopia Configuration\n`;
-            config += `# Project: ${params.projectName}\n`;
-            config += `# Generated: ${new Date().toISOString()}\n\n`;
-            
-            config += `# Input Configuration\n`;
-            config += `fastq_dir: ${params.fastqDir}\n`;
-            config += `project_name: ${params.projectName}\n\n`;
-            
-            config += `# Sample Sheet\n`;
-            config += `# Save this section as 'samples.txt'\n`;
-            config += params.sampleSheet + '\n\n';
-            
-            config += `# Pipeline Parameters\n`;
-            if (params.qc) config += `--qc\n`;
-            if (params.assembly) config += `--assembly\n`;
-            if (params.annotation) config += `--annotation\n`;
-            if (params.mlst) config += `--mlst\n`;
-            if (params.amr) config += `--amr\n`;
-            
-            return config;
-        }
-
-        function generateBactopiaCommand() {
-            const projectName = document.getElementById('projectName').value;
-            const fastqDir = document.getElementById('fastqDir').value;
-            
-            let command = `bactopia \\\n`;
-            command += `  --fastqs ${fastqDir} \\\n`;
-            command += `  --samples samples.txt \\\n`;
-            command += `  --outdir ${projectName}_results \\\n`;
-            command += `  --cpus 8 \\\n`;
-            command += `  --max_memory 32g`;
-            
-            displayOutput('bactopiaOutput', command);
-        }
-
-        // Utility Functions
-        async function readFile(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = e => resolve(e.target.result);
-                reader.onerror = reject;
-                reader.readAsText(file);
-            });
-        }
-
-        function showProgress(containerId) {
-            document.getElementById(containerId).style.display = 'block';
-        }
-
-        function updateProgress(barId, percent) {
-            const bar = document.getElementById(barId);
-            bar.style.width = percent + '%';
-            bar.textContent = percent + '%';
-        }
-
-        function displayOutput(outputId, content) {
-            const output = document.getElementById(outputId);
-            output.textContent = content;
-            output.style.display = 'block';
-        }
-
-        function showActions(actionsId) {
-            document.getElementById(actionsId).style.display = 'block';
-        }
-
-        function downloadFasta() {
-            const content = document.getElementById('fastaOutput').textContent;
-            downloadFile(content, 'processed_multifasta.fasta', 'text/plain');
-        }
-
-        function downloadBactopiaConfig() {
-            const content = document.getElementById('bactopiaOutput').textContent;
-            downloadFile(content, 'bactopia_config.txt', 'text/plain');
-        }
-
-        function downloadFile(content, filename, type) {
-            const blob = new Blob([content], { type });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function copyToClipboard(elementId) {
-            const content = document.getElementById(elementId).textContent;
-            navigator.clipboard.writeText(content).then(() => {
-                showAlert('Copiado para a área de transferência!', 'success');
-            }).catch(err => {
-                showAlert('Erro ao copiar: ' + err.message, 'error');
-            });
-        }
-
-        function showAlert(message, type) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type}`;
-            alertDiv.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-                ${message}
-            `;
-            
-            const firstSection = document.querySelector('.section');
-            firstSection.insertBefore(alertDiv, firstSection.firstChild);
-            
-            setTimeout(() => alertDiv.remove(), 5000);
-        }
-
-        // Smooth scrolling for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-
-        // Update section navigation on scroll
-        window.addEventListener('scroll', () => {
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('.section-nav a');
-            
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (scrollY >= (sectionTop - 200)) {
-                    current = section.getAttribute('id');
-                }
-            });
-            
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href').slice(1) === current) {
-                    link.classList.add('active');
-                }
-            });
-        });
-
-        // Add fade-in animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all cards
-        document.querySelectorAll('.card, .tool-card').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
-        });
-
-        // FASTQ Statistics Calculator
-        document.getElementById('fastqStatsForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const fileInput = document.getElementById('fastqFile');
-            const file = fileInput.files[0];
-            
-            document.getElementById('fastqSpinner').style.display = 'block';
-            document.getElementById('fastqStatsOutput').style.display = 'none';
-            
-            try {
-                const stats = await calculateFastqStats(file);
-                displayFastqStats(stats);
-                createCharts(stats);
-                document.getElementById('fastqStatsOutput').style.display = 'block';
-            } catch (error) {
-                showAlert('Erro ao processar arquivo FASTQ: ' + error.message, 'error');
-            } finally {
-                document.getElementById('fastqSpinner').style.display = 'none';
-            }
-        });
-
-        async function calculateFastqStats(file) {
-            const content = await readFile(file);
-            const lines = content.split('\n');
-            
-            let totalReads = 0;
-            let totalBases = 0;
-            let gcCount = 0;
-            let lengths = [];
-            let qualities = [];
-            
-            // Process FASTQ file (4 lines per read)
-            for (let i = 0; i < lines.length; i += 4) {
-                if (i + 3 >= lines.length) break;
-                
-                const header = lines[i];
-                const sequence = lines[i + 1];
-                const plus = lines[i + 2];
-                const quality = lines[i + 3];
-                
-                if (header.startsWith('@') && plus === '+') {
-                    totalReads++;
-                    const seqLength = sequence.length;
-                    totalBases += seqLength;
-                    lengths.push(seqLength);
-                    
-                    // Count GC content
-                    const gcInSeq = (sequence.match(/[GC]/gi) || []).length;
-                    gcCount += gcInSeq;
-                    
-                    // Calculate average quality score
-                    let qualSum = 0;
-                    for (let j = 0; j < quality.length; j++) {
-                        qualSum += quality.charCodeAt(j) - 33; // Phred+33 encoding
-                    }
-                    qualities.push(qualSum / quality.length);
-                }
-            }
-            
-            // Calculate statistics
-            lengths.sort((a, b) => b - a);
-            const n50 = calculateN50(lengths, totalBases);
-            const avgLength = totalBases / totalReads;
-            const gcContent = (gcCount / totalBases * 100).toFixed(2);
-            const avgQuality = (qualities.reduce((a, b) => a + b, 0) / qualities.length).toFixed(1);
-            
-            return {
-                totalReads,
-                totalBases,
-                avgLength: Math.round(avgLength),
-                gcContent,
-                avgQuality,
-                n50,
-                lengths,
-                qualities
-            };
-        }
-
-        function calculateN50(lengths, totalBases) {
-            let sum = 0;
-            const halfTotal = totalBases / 2;
-            
-            for (let length of lengths) {
-                sum += length;
-                if (sum >= halfTotal) {
-                    return length;
-                }
-            }
-            return 0;
-        }
-
-        function displayFastqStats(stats) {
-            document.getElementById('totalReads').textContent = stats.totalReads.toLocaleString();
-            document.getElementById('totalBases').textContent = stats.totalBases.toLocaleString();
-            document.getElementById('avgLength').textContent = stats.avgLength.toLocaleString() + ' bp';
-            document.getElementById('gcContent').textContent = stats.gcContent + '%';
-            document.getElementById('avgQuality').textContent = stats.avgQuality;
-            document.getElementById('n50').textContent = stats.n50.toLocaleString() + ' bp';
-        }
-
-        function createCharts(stats) {
-            // Create length distribution histogram
-            const lengthBins = createHistogram(stats.lengths, 20);
-            createBarChart('lengthChart', 'Comprimento (bp)', lengthBins);
-            
-            // Create quality distribution histogram
-            const qualityBins = createHistogram(stats.qualities, 20);
-            createBarChart('qualityChart', 'Qualidade Média', qualityBins);
-        }
-
-        function createHistogram(data, numBins) {
-            const min = Math.min(...data);
-            const max = Math.max(...data);
-            const binWidth = (max - min) / numBins;
-            const bins = new Array(numBins).fill(0);
-            const labels = [];
-            
-            for (let i = 0; i < numBins; i++) {
-                const binStart = min + i * binWidth;
-                const binEnd = binStart + binWidth;
-                labels.push(`${Math.round(binStart)}-${Math.round(binEnd)}`);
-                
-                for (let value of data) {
-                    if (value >= binStart && value < binEnd) {
-                        bins[i]++;
-                    }
-                }
-            }
-            
-            return { labels, data: bins };
-        }
-
-        function createBarChart(canvasId, label, histData) {
-            const canvas = document.getElementById(canvasId);
-            const ctx = canvas.getContext('2d');
-            
-            // Simple bar chart implementation
-            const width = canvas.width = canvas.offsetWidth;
-            const height = canvas.height = 300;
-            const padding = 40;
-            const barWidth = (width - 2 * padding) / histData.labels.length;
-            const maxValue = Math.max(...histData.data);
-            
-            // Clear canvas
-            ctx.clearRect(0, 0, width, height);
-            
-            // Draw bars
-            ctx.fillStyle = '#1976D2';
-            histData.data.forEach((value, index) => {
-                const barHeight = (value / maxValue) * (height - 2 * padding);
-                const x = padding + index * barWidth;
-                const y = height - padding - barHeight;
-                
-                ctx.fillRect(x, y, barWidth * 0.8, barHeight);
-            });
-            
-            // Draw axes
-            ctx.strokeStyle = '#666';
-            ctx.beginPath();
-            ctx.moveTo(padding, padding);
-            ctx.lineTo(padding, height - padding);
-            ctx.lineTo(width - padding, height - padding);
-            ctx.stroke();
-            
-            // Add label
-            ctx.fillStyle = '#fff';
-            ctx.font = '14px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText(label, width / 2, height - 10);
-        }
-
-        function downloadFastqReport() {
-            const stats = {
-                totalReads: document.getElementById('totalReads').textContent,
-                totalBases: document.getElementById('totalBases').textContent,
-                avgLength: document.getElementById('avgLength').textContent,
-                gcContent: document.getElementById('gcContent').textContent,
-                avgQuality: document.getElementById('avgQuality').textContent,
-                n50: document.getElementById('n50').textContent
-            };
-            
-            let report = `FASTQ Statistics Report\n`;
-            report += `Generated: ${new Date().toISOString()}\n\n`;
-            report += `Total Reads: ${stats.totalReads}\n`;
-            report += `Total Bases: ${stats.totalBases}\n`;
-            report += `Average Length: ${stats.avgLength}\n`;
-            report += `GC Content: ${stats.gcContent}\n`;
-            report += `Average Quality: ${stats.avgQuality}\n`;
-            report += `N50: ${stats.n50}\n`;
-            
-            downloadFile(report, 'fastq_stats_report.txt', 'text/plain');
-        }
-
-        // Enhanced Bactopia command generator
-        function generateBactopiaCommand() {
-            const projectName = document.getElementById('projectName').value;
-            const fastqDir = document.getElementById('fastqDir').value;
-            
-            let command = `#!/bin/bash\n\n`;
-            command += `# Bactopia Pipeline Command\n`;
-            command += `# Project: ${projectName}\n`;
-            command += `# Generated: ${new Date().toISOString()}\n\n`;
-            
-            command += `# Create output directory\n`;
-            command += `mkdir -p ${projectName}_results\n\n`;
-            
-            command += `# Run Bactopia\n`;
-            command += `bactopia \\\n`;
-            command += `  --fastqs ${fastqDir} \\\n`;
-            command += `  --samples samples.txt \\\n`;
-            command += `  --outdir ${projectName}_results \\\n`;
-            command += `  --cpus 8 \\\n`;
-            command += `  --max_memory 32g`;
-            
-            if (document.getElementById('qc').checked) command += ` \\\n  --qc`;
-            if (document.getElementById('assembly').checked) command += ` \\\n  --assembly`;
-            if (document.getElementById('annotation').checked) command += ` \\\n  --annotation`;
-            if (document.getElementById('mlst').checked) command += ` \\\n  --mlst`;
-            if (document.getElementById('amr').checked) command += ` \\\n  --amr`;
-            
-            command += `\n\n# Check results\n`;
-            command += `echo "Pipeline completed! Check results in ${projectName}_results/"\n`;
-            
-            displayOutput('bactopiaOutput', command);
-        }
-    </script>
+    }
+</script>
 </body>
-</html> 0.5rem;">
-                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
-                        <strong>fastq_quality.sh</strong> - Análise de qualidade com FastQC
-                    </li>
-                    <li style="margin-bottom:
+</html>
