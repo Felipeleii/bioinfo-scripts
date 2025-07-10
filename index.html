@@ -3,70 +3,453 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bioinfo Scripts v2.0 - Ferramentas de Bioinformática</title>
-    <meta name="description" content="Coleção de scripts otimizados para análise de dados de bioinformática - WGS bacteriano, pipelines e automação">
-    <meta name="keywords" content="bioinformática, WGS, bacterial genomics, FASTQ, FASTA, Bactopia, Python">
-    
-    <!-- CSS Frameworks -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <title>Bioinfo Scripts v3.0 - Ferramentas de Bioinformática</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet">
-    
     <style>
         :root {
-            --primary-color: #2563eb;
-            --secondary-color: #7c3aed;
-            --accent-color: #06b6d4;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --error-color: #ef4444;
-            --dark-bg: #0f172a;
-            --card-bg: #1e293b;
+            --primary-color: #2E7D32;
+            --secondary-color: #1976D2;
+            --accent-color: #F57C00;
+            --dark-bg: #121212;
+            --card-bg: #1E1E1E;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --success-color: #4CAF50;
+            --error-color: #F44336;
+            --border-color: #333333;
         }
 
-        .gradient-bg {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
-        .glass-effect {
-            backdrop-filter: blur(16px);
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
         }
 
-        .animate-float {
-            animation: float 6s ease-in-out infinite;
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
         }
 
-        .code-block {
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--card-bg);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1200px;
+            margin: 5rem auto 2rem;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, rgba(46,125,50,0.1), rgba(25,118,210,0.1));
+            border-radius: 20px;
+            margin-bottom: 3rem;
             position: relative;
             overflow: hidden;
         }
 
-        .copy-button {
+        .hero::before {
+            content: '';
             position: absolute;
-            top: 10px;
-            right: 10px;
-            opacity: 0;
-            transition: opacity 0.3s;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+            opacity: 0.03;
+            animation: pulse 4s ease-in-out infinite;
         }
 
-        .code-block:hover .copy-button {
-            opacity: 1;
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Section Styles */
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.05));
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover::before {
+            transform: translateX(0);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--dark-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="file"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(25,118,210,0.2);
+        }
+
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.2);
+            transition: left 0.3s ease;
+        }
+
+        .btn:hover::before {
+            left: 0;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--accent-color), #FF8F00);
+        }
+
+        /* Tool Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-color: var(--secondary-color);
+        }
+
+        .tool-icon {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .tool-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Output Styles */
+        .output-area {
+            background: var(--dark-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--card-bg);
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab.active {
+            color: var(--secondary-color);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--secondary-color);
         }
 
         .tab-content {
@@ -77,1521 +460,1146 @@
             display: block;
         }
 
-        .pulse-dot {
-            animation: pulse 2s infinite;
+        /* Alert Messages */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        .alert-success {
+            background: rgba(76,175,80,0.2);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
         }
 
-        .typing-effect {
-            border-right: 2px solid var(--accent-color);
-            animation: blink 1s infinite;
+        .alert-error {
+            background: rgba(244,67,54,0.2);
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
         }
 
-        @keyframes blink {
-            50% { border-color: transparent; }
+        /* Progress Bar */
+        .progress-container {
+            background: var(--dark-bg);
+            border-radius: 10px;
+            padding: 3px;
+            margin-top: 1rem;
+            display: none;
         }
 
-        /* Dark theme */
-        .dark {
-            background-color: var(--dark-bg);
-            color: #f8fafc;
-        }
-
-        .dark .card-bg {
-            background-color: var(--card-bg);
-        }
-
-        /* Progress bar animation */
         .progress-bar {
-            animation: progress 2s ease-in-out;
+            height: 20px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 7px;
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
 
-        @keyframes progress {
-            from { width: 0%; }
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
         }
 
-        /* Scroll animations */
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease;
+        /* Section Navigation */
+        .section-nav {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 100;
         }
 
-        .fade-in-up.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .section-nav a {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border-color);
+            transition: all 0.3s ease;
         }
 
-        /* Additional Styles */
-        .nav-link {
-            @apply text-gray-700 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 transition-colors;
+        .section-nav a.active,
+        .section-nav a:hover {
+            background: var(--secondary-color);
+            transform: scale(1.5);
         }
 
-        .btn-primary {
-            @apply bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 inline-flex items-center;
-        }
-
-        .btn-secondary {
-            @apply bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 inline-flex items-center;
-        }
-
-        .btn-sm {
-            @apply px-3 py-1 rounded text-sm font-medium transition-colors;
-        }
-
-        .tag {
-            @apply bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded text-xs;
-        }
-
-        .tab-btn {
-            @apply px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 border-b-2 border-transparent hover:border-blue-300 transition-colors mr-4 mb-2;
-        }
-
-        .tab-btn.active {
-            @apply text-blue-600 dark:text-blue-400 border-blue-500;
-        }
-
-        .example-tab {
-            @apply px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 border-b-2 border-transparent hover:border-blue-300 transition-colors mr-4;
-        }
-
-        .example-tab.active {
-            @apply text-blue-600 dark:text-blue-400 border-blue-500;
-        }
-
-        .download-item {
-            @apply w-full flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors border border-gray-200 dark:border-gray-600;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .gradient-bg h1 {
-                font-size: 3rem;
-            }
-            .gradient-bg h1 span {
-                font-size: 2rem;
+        @media (max-width: 1024px) {
+            .section-nav {
+                display: none;
             }
         }
     </style>
 </head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="#" class="logo">
+                <i class="fas fa-dna"></i>
+                Bioinfo Scripts v3.0
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Início</a></li>
+                <li><a href="#tools">Ferramentas</a></li>
+                <li><a href="#multifasta">MultiFASTA</a></li>
+                <li><a href="#bactopia">Bactopia</a></li>
+                <li><a href="#scripts">Scripts</a></li>
+                <li><a href="#about">Sobre</a></li>
+                <li><a href="https://github.com/Felipeleii/bioinfo-scripts" target="_blank"><i class="fab fa-github"></i></a></li>
+            </ul>
+            <div class="mobile-menu" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
 
-<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 glass-effect">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-dna text-3xl text-blue-500"></i>
-                    <span class="text-xl font-bold">Bioinfo Scripts v2.0</span>
-                </div>
+    <!-- Section Navigation -->
+    <div class="section-nav">
+        <a href="#home" class="active"></a>
+        <a href="#tools"></a>
+        <a href="#multifasta"></a>
+        <a href="#bactopia"></a>
+        <a href="#scripts"></a>
+        <a href="#about"></a>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <h1>Bioinfo Scripts v3.0</h1>
+            <p>Ferramentas avançadas de bioinformática para análise de genomas bacterianos e sequenciamento Illumina</p>
+        </section>
+
+        <!-- Tools Section -->
+        <section id="tools" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-tools"></i>
+                Ferramentas Principais
+            </h2>
+            <div class="tools-grid">
+                <a href="#multifasta" class="tool-card">
+                    <i class="fas fa-file-alt tool-icon"></i>
+                    <h3 class="tool-title">Gerador MultiFASTA</h3>
+                    <p class="tool-description">Crie arquivos multiFASTA com rastreamento automático de origem das sequências</p>
+                </a>
+                <a href="#bactopia" class="tool-card">
+                    <i class="fas fa-bacteria tool-icon"></i>
+                    <h3 class="tool-title">Bactopia Prepare GUI</h3>
+                    <p class="tool-description">Interface gráfica para preparação de dados do pipeline Bactopia</p>
+                </a>
+                <a href="#fastq-stats" class="tool-card">
+                    <i class="fas fa-chart-line tool-icon"></i>
+                    <h3 class="tool-title">FASTQ Stats Calculator</h3>
+                    <p class="tool-description">Calcule estatísticas básicas de arquivos FASTQ (reads, qualidade, GC%)</p>
+                </a>
+                <a href="#primer-design" class="tool-card">
+                    <i class="fas fa-dna tool-icon"></i>
+                    <h3 class="tool-title">Primer Designer</h3>
+                    <p class="tool-description">Desenhe primers para PCR com análise de Tm e estruturas secundárias</p>
+                </a>
+                <a href="#genome-stats" class="tool-card">
+                    <i class="fas fa-chart-bar tool-icon"></i>
+                    <h3 class="tool-title">Genome Statistics</h3>
+                    <p class="tool-description">Calcule N50, tamanho do genoma, número de contigs e outras métricas</p>
+                </a>
+                <a href="#mlst-tool" class="tool-card">
+                    <i class="fas fa-fingerprint tool-icon"></i>
+                    <h3 class="tool-title">MLST Analyzer</h3>
+                    <p class="tool-description">Análise de Multi-Locus Sequence Typing para tipagem bacteriana</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- MultiFASTA Generator Section -->
+        <section id="multifasta" class="section">
+            <div class="card">
+                <h2 class="section-title">
+                    <i class="fas fa-file-alt"></i>
+                    Gerador de Arquivos MultiFASTA Adaptado
+                </h2>
+                <p>Esta ferramenta permite criar arquivos multiFASTA onde o nome do arquivo de origem é automaticamente incorporado ao cabeçalho de cada contig, facilitando o rastreamento da amostra de origem.</p>
                 
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="#home" class="nav-link">Início</a>
-                    <a href="#tools" class="nav-link">Ferramentas</a>
-                    <a href="#documentation" class="nav-link">Documentação</a>
-                    <a href="#download" class="nav-link">Download</a>
-                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
-                        <i class="fas fa-moon dark:hidden"></i>
-                        <i class="fas fa-sun hidden dark:inline"></i>
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('single', this)">Arquivo Único</button>
+                    <button class="tab" onclick="switchTab('batch', this)">Lote de Arquivos</button>
+                </div>
+
+                <div id="single" class="tab-content active">
+                    <form id="singleFastaForm">
+                        <div class="form-group">
+                            <label for="fastaFile">Arquivo FASTA:</label>
+                            <input type="file" id="fastaFile" accept=".fasta,.fa,.fna" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="samplePrefix">Prefixo da Amostra (opcional):</label>
+                            <input type="text" id="samplePrefix" placeholder="Ex: Sample001">
+                        </div>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-magic"></i>
+                            Processar FASTA
+                        </button>
+                    </form>
+                </div>
+
+                <div id="batch" class="tab-content">
+                    <form id="batchFastaForm">
+                        <div class="form-group">
+                            <label for="fastaFiles">Arquivos FASTA (múltiplos):</label>
+                            <input type="file" id="fastaFiles" accept=".fasta,.fa,.fna" multiple required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mergeOption">Opção de Mesclagem:</label>
+                            <select id="mergeOption">
+                                <option value="separate">Manter arquivos separados</option>
+                                <option value="merge">Mesclar em um único arquivo</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-layer-group"></i>
+                            Processar Lote
+                        </button>
+                    </form>
+                </div>
+
+                <div class="progress-container" id="fastaProgress">
+                    <div class="progress-bar" id="fastaProgressBar">0%</div>
+                </div>
+
+                <div id="fastaOutput" class="output-area" style="display: none;">
+                    <!-- Output will be displayed here -->
+                </div>
+
+                <div id="fastaActions" style="display: none; margin-top: 1rem;">
+                    <button class="btn btn-secondary" onclick="downloadFasta()">
+                        <i class="fas fa-download"></i>
+                        Baixar Resultado
+                    </button>
+                    <button class="btn" onclick="copyToClipboard('fastaOutput')">
+                        <i class="fas fa-copy"></i>
+                        Copiar para Área de Transferência
                     </button>
                 </div>
-
-                <!-- Mobile menu button -->
-                <button id="mobile-menu-btn" class="md:hidden p-2">
-                    <i class="fas fa-bars"></i>
-                </button>
             </div>
+        </section>
 
-            <!-- Mobile menu -->
-            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
-                <a href="#home" class="block py-2">Início</a>
-                <a href="#tools" class="block py-2">Ferramentas</a>
-                <a href="#documentation" class="block py-2">Documentação</a>
-                <a href="#download" class="block py-2">Download</a>
-            </div>
-        </div>
-    </nav>
+        <!-- Bactopia Prepare GUI Section -->
+        <section id="bactopia" class="section">
+            <div class="card">
+                <h2 class="section-title">
+                    <i class="fas fa-bacteria"></i>
+                    Bactopia Prepare GUI
+                </h2>
+                <p>Interface gráfica intuitiva para preparar dados de entrada para o pipeline Bactopia. Organize seus arquivos FASTQ e metadados facilmente.</p>
 
-    <!-- Hero Section -->
-    <section id="home" class="min-h-screen flex items-center gradient-bg text-white relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10">
-            <div class="animate-float absolute top-20 left-10">
-                <i class="fas fa-virus text-6xl"></i>
-            </div>
-            <div class="animate-float absolute top-40 right-20" style="animation-delay: -2s;">
-                <i class="fas fa-microscope text-8xl"></i>
-            </div>
-            <div class="animate-float absolute bottom-20 left-1/4" style="animation-delay: -4s;">
-                <i class="fas fa-dna text-7xl"></i>
-            </div>
-        </div>
+                <form id="bactopiaForm">
+                    <div class="form-group">
+                        <label for="projectName">Nome do Projeto:</label>
+                        <input type="text" id="projectName" required placeholder="Ex: Ecoli_WGS_2024">
+                    </div>
 
-        <div class="container mx-auto px-6 text-center relative z-10">
-            <h1 class="text-6xl md:text-8xl font-bold mb-6 fade-in-up">
-                Bioinfo Scripts
-                <span class="block text-4xl md:text-5xl text-cyan-300 mt-2">v2.0</span>
-            </h1>
-            
-            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto fade-in-up">
-                Coleção <strong>otimizada</strong> de scripts para análise de dados de bioinformática.
-                <br>Focado em <strong>WGS bacteriano</strong>, pipelines automatizados e gestão eficiente de dados.
-            </p>
+                    <div class="form-group">
+                        <label for="fastqDir">Diretório dos arquivos FASTQ:</label>
+                        <input type="text" id="fastqDir" placeholder="/caminho/para/fastq" required>
+                    </div>
 
-            <div class="flex flex-col md:flex-row gap-4 justify-center items-center mb-12 fade-in-up">
-                <a href="#tools" class="btn-primary group">
-                    <i class="fas fa-tools mr-2"></i>
-                    Explorar Ferramentas
-                    <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                <a href="https://github.com/Felipeleii/bioinfo-scripts" class="btn-secondary group" target="_blank">
-                    <i class="fab fa-github mr-2"></i>
-                    Ver no GitHub
-                    <i class="fas fa-external-link-alt ml-2 group-hover:scale-110 transition-transform"></i>
-                </a>
-            </div>
+                    <div class="form-group">
+                        <label for="genome">Genoma de Referência (opcional):</label>
+                        <input type="file" id="genome" accept=".fasta,.fa,.fna">
+                    </div>
 
-            <!-- Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto fade-in-up">
-                <div class="text-center">
-                    <div class="text-3xl font-bold text-cyan-300" data-count="15">0</div>
-                    <div class="text-sm opacity-80">Scripts</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl font-bold text-cyan-300" data-count="5">0</div>
-                    <div class="text-sm opacity-80">Categorias</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl font-bold text-cyan-300" data-count="100">0</div>
-                    <div class="text-sm opacity-80">% Python</div>
-                </div>
-                <div class="text-center">
-                    <div class="text-3xl font-bold text-cyan-300" data-count="24">0</div>
-                    <div class="text-sm opacity-80">Commits</div>
-                </div>
-            </div>
-        </div>
+                    <div class="form-group">
+                        <label for="sampleSheet">Planilha de Amostras:</label>
+                        <textarea id="sampleSheet" placeholder="sample,fastq_1,fastq_2&#10;Sample1,sample1_R1.fastq.gz,sample1_R2.fastq.gz&#10;Sample2,sample2_R1.fastq.gz,sample2_R2.fastq.gz" rows="5"></textarea>
+                    </div>
 
-        <!-- Scroll indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <i class="fas fa-chevron-down text-2xl opacity-70"></i>
-        </div>
-    </section>
-
-    <!-- Tools Section -->
-    <section id="tools" class="py-20 bg-white dark:bg-gray-900">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16 fade-in-up">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">Ferramentas Disponíveis</h2>
-                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-                    Scripts otimizados com interface moderna, validação robusta e documentação completa
-                </p>
-            </div>
-
-            <!-- Category Tabs -->
-            <div class="flex flex-wrap justify-center mb-12 fade-in-up">
-                <button class="tab-btn active" data-category="all">
-                    <i class="fas fa-th-large mr-2"></i>Todas
-                </button>
-                <button class="tab-btn" data-category="file_management">
-                    <i class="fas fa-folder-open mr-2"></i>Gestão de Arquivos
-                </button>
-                <button class="tab-btn" data-category="sequence_analysis">
-                    <i class="fas fa-dna mr-2"></i>Análise de Sequências
-                </button>
-                <button class="tab-btn" data-category="pipeline">
-                    <i class="fas fa-cogs mr-2"></i>Pipelines
-                </button>
-            </div>
-
-            <!-- Tools Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 fade-in-up">
-                <!-- FASTQ Renamer -->
-                <div class="tool-card" data-category="file_management">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 card-hover h-full">
-                        <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="fas fa-file-archive text-blue-600 dark:text-blue-400 text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold">FASTQ Renamer</h3>
-                                <div class="flex items-center">
-                                    <span class="pulse-dot w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                                    <span class="text-sm text-green-600">Otimizado</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <p class="text-gray-600 dark:text-gray-300 mb-4">
-                            Renomeia arquivos FASTQ com padrões inteligentes. Suporte a busca recursiva, backup automático e validação.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="tag">Python 3.8+</span>
-                            <span class="tag">CLI</span>
-                            <span class="tag">Logging</span>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <h4 class="font-semibold mb-2">Funcionalidades:</h4>
-                            <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Lista todas as ferramentas por categoria</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Execução unificada de scripts</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Setup automático de dependências</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Configuração de ambiente</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="flex gap-2">
-                            <button class="btn-sm btn-primary" onclick="showCodeExample('tools_manager')">
-                                <i class="fas fa-code mr-1"></i>Exemplo
-                            </button>
-                            <button class="btn-sm btn-secondary" onclick="downloadScript('bioinfo_manager.py')">
-                                <i class="fas fa-download mr-1"></i>Download
-                            </button>
+                    <div class="form-group">
+                        <label for="bactopiaParams">Parâmetros Adicionais:</label>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" id="qc" checked>
+                                <span>Controle de Qualidade</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" id="assembly" checked>
+                                <span>Montagem de Genoma</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" id="annotation" checked>
+                                <span>Anotação</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" id="mlst" checked>
+                                <span>MLST</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" id="amr" checked>
+                                <span>Resistência Antimicrobiana</span>
+                            </label>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Documentation Section -->
-    <section id="documentation" class="py-20 bg-gray-50 dark:bg-gray-800">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16 fade-in-up">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">Documentação</h2>
-                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-                    Guias completos, exemplos práticos e melhores práticas para usar as ferramentas
-                </p>
-            </div>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-cog"></i>
+                        Gerar Configuração Bactopia
+                    </button>
+                </form>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 fade-in-up">
-                <!-- Quick Start -->
-                <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8">
-                    <h3 class="text-2xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-rocket text-blue-500 mr-3"></i>
-                        Quick Start
-                    </h3>
-
-                    <div class="space-y-6">
-                        <div>
-                            <h4 class="font-semibold mb-3">1. Clone o Repositório</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700 hover:bg-gray-600" onclick="copyToClipboard(this, 'git clone https://github.com/Felipeleii/bioinfo-scripts.git\ncd bioinfo-scripts')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code>git clone https://github.com/Felipeleii/bioinfo-scripts.git
-cd bioinfo-scripts</code></pre>
-                            </div>
-                        </div>
-
-                        <div>
-                            <h4 class="font-semibold mb-3">2. Setup do Ambiente</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700 hover:bg-gray-600" onclick="copyToClipboard(this, 'python bioinfo_manager.py setup')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code>python bioinfo_manager.py setup</code></pre>
-                            </div>
-                        </div>
-
-                        <div>
-                            <h4 class="font-semibold mb-3">3. Listar Ferramentas</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700 hover:bg-gray-600" onclick="copyToClipboard(this, 'python bioinfo_manager.py list')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code>python bioinfo_manager.py list</code></pre>
-                            </div>
-                        </div>
-
-                        <div>
-                            <h4 class="font-semibold mb-3">4. Executar Ferramenta</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700 hover:bg-gray-600" onclick="copyToClipboard(this, 'python bioinfo_manager.py run fastq_renamer /path/to/data --dry-run')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code>python bioinfo_manager.py run fastq_renamer /path/to/data --dry-run</code></pre>
-                            </div>
-                        </div>
-                    </div>
+                <div id="bactopiaOutput" class="output-area" style="display: none;">
+                    <!-- Bactopia configuration will be displayed here -->
                 </div>
 
-                <!-- Examples -->
-                <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8">
-                    <h3 class="text-2xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-code text-purple-500 mr-3"></i>
-                        Exemplos Práticos
-                    </h3>
-
-                    <!-- Tab buttons for examples -->
-                    <div class="flex flex-wrap mb-6 border-b border-gray-200 dark:border-gray-700">
-                        <button class="example-tab active" data-target="fastq-example">FASTQ</button>
-                        <button class="example-tab" data-target="fasta-example">FASTA</button>
-                        <button class="example-tab" data-target="contig-example">Contigs</button>
-                        <button class="example-tab" data-target="bactopia-example">Bactopia</button>
-                    </div>
-
-                    <!-- FASTQ Example -->
-                    <div id="fastq-example" class="example-content">
-                        <h4 class="font-semibold mb-3">Renomear Arquivos FASTQ</h4>
-                        <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative mb-4">
-                            <button class="copy-button btn-sm bg-gray-700 hover:bg-gray-600" onclick="copyToClipboard(this, '# Renomear mantendo primeiro e último campo\npython fastq_renamer.py /dados/fastq --pattern first_last --backup\n\n# Modo dry-run para testar\npython fastq_renamer.py /dados/fastq --dry-run --verbose')">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                            <pre><code># Renomear mantendo primeiro e último campo
-python fastq_renamer.py /dados/fastq --pattern first_last --backup
-
-# Modo dry-run para testar
-python fastq_renamer.py /dados/fastq --dry-run --verbose</code></pre>
-                        </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            <strong>Resultado:</strong> <code>N1_010_1.fastq.gz</code> → <code>N1_1.fastq.gz</code>
-                        </p>
-                    </div>
-
-                    <!-- FASTA Example -->
-                    <div id="fasta-example" class="example-content hidden">
-                        <h4 class="font-semibold mb-3">Renomear Arquivos FASTA</h4>
-                        <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative mb-4">
-                            <button class="copy-button btn-sm bg-gray-700 hover:bg-gray-600" onclick="copyToClipboard(this, '# Manter apenas primeiro campo\npython fasta_renamer.py /dados/fasta --pattern first_only\n\n# Manter dois primeiros campos com backup\npython fasta_renamer.py /dados/fasta --pattern first_two --backup --force')">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                            <pre><code># Manter apenas primeiro campo
-python fasta_renamer.py /dados/fasta --pattern first_only
-
-# Manter dois primeiros campos com backup
-python fasta_renamer.py /dados/fasta --pattern first_two --backup --force</code></pre>
-                        </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            <strong>Resultado:</strong> <code>HSP1_001_Klebsiella_pneumoniae.fasta</code> → <code>HSP1.fasta</code>
-                        </p>
-                    </div>
-
-                    <!-- Contig Example -->
-                    <div id="contig-example" class="example-content hidden">
-                        <h4 class="font-semibold mb-3">Separar Contigs Multi-FASTA</h4>
-                        <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative mb-4">
-                            <button class="copy-button btn-sm bg-gray-700 hover:bg-gray-600" onclick="copyToClipboard(this, '# Separar contigs com filtro de tamanho\npython contig_separator.py input.fasta output_dir/ --min-length 500\n\n# Usar padrão customizado\npython contig_separator.py input.fasta output_dir/ --custom-pattern \"(isolado_\\d+)\"')">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                            <pre><code># Separar contigs com filtro de tamanho
-python contig_separator.py input.fasta output_dir/ --min-length 500
-
-# Usar padrão customizado
-python contig_separator.py input.fasta output_dir/ --custom-pattern "(isolado_\d+)"</code></pre>
-                        </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            <strong>Resultado:</strong> Arquivos separados por isolado: <code>S10_005.fasta</code>, <code>N3_007.fasta</code>
-                        </p>
-                    </div>
-
-                    <!-- Bactopia Example -->
-                    <div id="bactopia-example" class="example-content hidden">
-                        <h4 class="font-semibold mb-3">Executar Bactopia GUI</h4>
-                        <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative mb-4">
-                            <button class="copy-button btn-sm bg-gray-700 hover:bg-gray-600" onclick="copyToClipboard(this, '# Instalar dependências\npip install pandas\nsudo apt install python3-tk  # Ubuntu/Debian\n\n# Executar GUI\npython bactopia_gui.py')">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                            <pre><code># Instalar dependências
-pip install pandas
-sudo apt install python3-tk  # Ubuntu/Debian
-
-# Executar GUI
-python bactopia_gui.py</code></pre>
-                        </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">
-                            <strong>Interface:</strong> GUI com abas para configuração, gestão de amostras e execução automatizada
-                        </p>
-                    </div>
+                <div id="bactopiaActions" style="display: none; margin-top: 1rem;">
+                    <button class="btn btn-secondary" onclick="downloadBactopiaConfig()">
+                        <i class="fas fa-download"></i>
+                        Baixar Configuração
+                    </button>
+                    <button class="btn" onclick="generateBactopiaCommand()">
+                        <i class="fas fa-terminal"></i>
+                        Gerar Comando
+                    </button>
                 </div>
             </div>
+        </section>
 
-            <!-- Installation Guide -->
-            <div class="mt-16 fade-in-up">
-                <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8">
-                    <h3 class="text-2xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-download text-green-500 mr-3"></i>
-                        Instalação e Dependências
-                    </h3>
+        <!-- FASTQ Stats Calculator Section -->
+        <section id="fastq-stats" class="section">
+            <div class="card">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    FASTQ Statistics Calculator
+                </h2>
+                <p>Analise arquivos FASTQ e obtenha estatísticas detalhadas sobre suas sequências.</p>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div>
-                            <h4 class="font-semibold mb-4">Requisitos do Sistema</h4>
-                            <ul class="space-y-2 text-gray-600 dark:text-gray-300">
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Python 3.8 ou superior</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Git (para clonagem)</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Linux, macOS ou Windows</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Mínimo 4GB RAM</li>
-                            </ul>
+                <form id="fastqStatsForm">
+                    <div class="form-group">
+                        <label for="fastqFile">Arquivo FASTQ:</label>
+                        <input type="file" id="fastqFile" accept=".fastq,.fq,.fastq.gz" required>
+                    </div>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-calculator"></i>
+                        Calcular Estatísticas
+                    </button>
+                </form>
+
+                <div class="spinner" id="fastqSpinner"></div>
+
+                <div id="fastqStatsOutput" style="display: none;">
+                    <h3>Estatísticas do Arquivo:</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                        <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                            <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Total de Reads</h4>
+                            <p id="totalReads" style="font-size: 1.5rem; font-weight: bold;">-</p>
                         </div>
-
-                        <div>
-                            <h4 class="font-semibold mb-4">Dependências Python</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700 hover:bg-gray-600" onclick="copyToClipboard(this, 'pip install biopython pandas')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code>pip install biopython pandas</code></pre>
-                            </div>
+                        <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                            <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Total de Bases</h4>
+                            <p id="totalBases" style="font-size: 1.5rem; font-weight: bold;">-</p>
                         </div>
-
-                        <div>
-                            <h4 class="font-semibold mb-4">Ferramentas Externas (Opcional)</h4>
-                            <ul class="space-y-2 text-gray-600 dark:text-gray-300">
-                                <li><i class="fas fa-check text-blue-500 mr-2"></i>Nextflow (para Bactopia)</li>
-                                <li><i class="fas fa-check text-blue-500 mr-2"></i>Docker ou Singularity</li>
-                                <li><i class="fas fa-check text-blue-500 mr-2"></i>Java 11+ (para Nextflow)</li>
-                            </ul>
+                        <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                            <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Comprimento Médio</h4>
+                            <p id="avgLength" style="font-size: 1.5rem; font-weight: bold;">-</p>
                         </div>
-
-                        <div>
-                            <h4 class="font-semibold mb-4">Setup Completo</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700 hover:bg-gray-600" onclick="copyToClipboard(this, './setup_environment.sh')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code>./setup_environment.sh</code></pre>
-                            </div>
+                        <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                            <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">GC Content (%)</h4>
+                            <p id="gcContent" style="font-size: 1.5rem; font-weight: bold;">-</p>
+                        </div>
+                        <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                            <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Qualidade Média</h4>
+                            <p id="avgQuality" style="font-size: 1.5rem; font-weight: bold;">-</p>
+                        </div>
+                        <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                            <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">N50</h4>
+                            <p id="n50" style="font-size: 1.5rem; font-weight: bold;">-</p>
                         </div>
                     </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h3>Distribuição de Comprimento de Reads</h3>
+                        <canvas id="lengthChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h3>Distribuição de Qualidade</h3>
+                        <canvas id="qualityChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="downloadFastqReport()" style="margin-top: 1rem;">
+                        <i class="fas fa-download"></i>
+                        Baixar Relatório
+                    </button>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Download Section -->
-    <section id="download" class="py-20 bg-white dark:bg-gray-900">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16 fade-in-up">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">Download</h2>
-                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-                    Baixe os scripts individuais ou o pacote completo
-                </p>
+        <!-- Scripts Section -->
+        <section id="scripts" class="section">
+            <h2 class="section-title">
+                <i class="fas fa-code"></i>
+                Scripts Úteis
+            </h2>
+
+            <div class="card">
+                <h3>Scripts de Análise de Qualidade</h3>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                        <strong>multiqc_report.py</strong> - Agregação de relatórios MultiQC
+                    </li>
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                        <strong>trim_adapters.sh</strong> - Remoção de adaptadores com Trimmomatic
+                    </li>
+                </ul>
             </div>
 
-            <div class="max-w-4xl mx-auto fade-in-up">
-                <!-- Download Options -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                    <!-- Full Package -->
-                    <div class="bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-xl p-8 text-center">
-                        <div class="mb-6">
-                            <i class="fas fa-archive text-6xl mb-4"></i>
-                            <h3 class="text-2xl font-bold">Pacote Completo</h3>
-                            <p class="mt-2 opacity-90">Todos os scripts + documentação</p>
-                        </div>
-                        
-                        <div class="space-y-3 mb-6">
-                            <div class="flex justify-between">
-                                <span>Scripts:</span>
-                                <span class="font-bold">15+</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>Tamanho:</span>
-                                <span class="font-bold">~2MB</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>Formato:</span>
-                                <span class="font-bold">ZIP / TAR.GZ</span>
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-2">
-                            <a href="https://github.com/Felipeleii/bioinfo-scripts/archive/refs/heads/main.zip" 
-                               class="block w-full bg-white text-blue-600 py-3 px-6 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                                <i class="fab fa-github mr-2"></i>Download ZIP
-                            </a>
-                            <a href="#" onclick="copyToClipboard(this, 'git clone https://github.com/Felipeleii/bioinfo-scripts.git')"
-                               class="block w-full bg-black bg-opacity-20 py-3 px-6 rounded-lg font-semibold hover:bg-opacity-30 transition-colors">
-                                <i class="fas fa-code-branch mr-2"></i>Git Clone
-                            </a>
-                        </div>
+            <div class="card">
+                <h3>Scripts de Montagem</h3>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                        <strong>spades_assembly.sh</strong> - Montagem com SPAdes
+                    </li>
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                        <strong>unicycler_hybrid.sh</strong> - Montagem híbrida Illumina + ONT
+                    </li>
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                        <strong>assembly_stats.py</strong> - Estatísticas de montagem
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Scripts de Anotação</h3>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                        <strong>prokka_batch.sh</strong> - Anotação em lote com Prokka
+                    </li>
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                        <strong>bakta_annotate.sh</strong> - Anotação com Bakta
+                    </li>
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                        <strong>extract_genes.py</strong> - Extração de genes específicos
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Scripts de Análise Comparativa</h3>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                        <strong>ani_calculator.py</strong> - Cálculo de ANI (Average Nucleotide Identity)
+                    </li>
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                        <strong>snp_analysis.sh</strong> - Análise de SNPs com snippy
+                    </li>
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                        <strong>pangenome_roary.sh</strong> - Análise de pangenoma com Roary
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="card">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    Sobre o Projeto
+                </h2>
+                <p>O <strong>Bioinfo Scripts v3.0</strong> é uma coleção unificada de ferramentas e scripts para análise de genomas bacterianos, com foco especial em dados de sequenciamento Illumina.</p>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Características Principais:</h3>
+                <ul style="list-style: none; padding-left: 0;">
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-check" style="color: var(--success-color);"></i>
+                        Interface web intuitiva e responsiva
+                    </li>
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-check" style="color: var(--success-color);"></i>
+                        Processamento de arquivos FASTA/FASTQ no navegador
+                    </li>
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-check" style="color: var(--success-color);"></i>
+                        Integração com pipelines populares (Bactopia, Prokka, SPAdes)
+                    </li>
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-check" style="color: var(--success-color);"></i>
+                        Scripts otimizados para análise de WGS bacteriano
+                    </li>
+                    <li style="margin-bottom: 0.5rem;">
+                        <i class="fas fa-check" style="color: var(--success-color);"></i>
+                        Documentação completa e exemplos práticos
+                    </li>
+                </ul>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Instalação e Uso:</h3>
+                <div class="output-area">
+# Clone o repositório
+git clone https://github.com/Felipeleii/bioinfo-scripts.git
+cd bioinfo-scripts
+
+# Instale as dependências
+conda env create -f environment.yml
+conda activate bioinfo-scripts
+
+# Execute os scripts
+./scripts/run_analysis.sh
+                </div>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Scripts Disponíveis para Download:</h3>
+                <div class="tools-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <div class="tool-card" style="padding: 1rem;">
+                        <i class="fas fa-download" style="color: var(--success-color);"></i>
+                        <h4 style="font-size: 1rem; margin: 0.5rem 0;">illumina_qc_pipeline.sh</h4>
+                        <p style="font-size: 0.85rem;">Pipeline completo de QC para dados Illumina</p>
                     </div>
-
-                    <!-- Individual Scripts -->
-                    <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-8">
-                        <div class="text-center mb-6">
-                            <i class="fas fa-file-code text-6xl text-gray-600 dark:text-gray-300 mb-4"></i>
-                            <h3 class="text-2xl font-bold">Scripts Individuais</h3>
-                            <p class="mt-2 text-gray-600 dark:text-gray-300">Baixe apenas o que precisa</p>
-                        </div>
-
-                        <div class="space-y-3">
-                            <button class="download-item" onclick="downloadScript('fastq_renamer.py')">
-                                <div class="flex items-center">
-                                    <i class="fas fa-file-archive text-blue-500 mr-3"></i>
-                                    <span>fastq_renamer.py</span>
-                                </div>
-                                <i class="fas fa-download"></i>
-                            </button>
-                            
-                            <button class="download-item" onclick="downloadScript('fasta_renamer.py')">
-                                <div class="flex items-center">
-                                    <i class="fas fa-file-code text-purple-500 mr-3"></i>
-                                    <span>fasta_renamer.py</span>
-                                </div>
-                                <i class="fas fa-download"></i>
-                            </button>
-                            
-                            <button class="download-item" onclick="downloadScript('contig_separator.py')">
-                                <div class="flex items-center">
-                                    <i class="fas fa-cut text-green-500 mr-3"></i>
-                                    <span>contig_separator.py</span>
-                                </div>
-                                <i class="fas fa-download"></i>
-                            </button>
-                            
-                            <button class="download-item" onclick="downloadScript('bactopia_gui.py')">
-                                <div class="flex items-center">
-                                    <i class="fas fa-desktop text-indigo-500 mr-3"></i>
-                                    <span>bactopia_gui.py</span>
-                                </div>
-                                <i class="fas fa-download"></i>
-                            </button>
-                            
-                            <button class="download-item" onclick="downloadScript('bioinfo_manager.py')">
-                                <div class="flex items-center">
-                                    <i class="fas fa-toolbox text-red-500 mr-3"></i>
-                                    <span>bioinfo_manager.py</span>
-                                </div>
-                                <i class="fas fa-download"></i>
-                            </button>
-                        </div>
+                    <div class="tool-card" style="padding: 1rem;">
+                        <i class="fas fa-download" style="color: var(--success-color);"></i>
+                        <h4 style="font-size: 1rem; margin: 0.5rem 0;">bacterial_assembly.py</h4>
+                        <p style="font-size: 0.85rem;">Automatização de montagem com SPAdes/Unicycler</p>
+                    </div>
+                    <div class="tool-card" style="padding: 1rem;">
+                        <i class="fas fa-download" style="color: var(--success-color);"></i>
+                        <h4 style="font-size: 1rem; margin: 0.5rem 0;">multifasta_generator.py</h4>
+                        <p style="font-size: 0.85rem;">Versão CLI do gerador multiFASTA</p>
+                    </div>
+                    <div class="tool-card" style="padding: 1rem;">
+                        <i class="fas fa-download" style="color: var(--success-color);"></i>
+                        <h4 style="font-size: 1rem; margin: 0.5rem 0;">bactopia_helper.sh</h4>
+                        <p style="font-size: 0.85rem;">Scripts auxiliares para Bactopia</p>
                     </div>
                 </div>
 
-                <!-- Release Notes -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8">
-                    <h3 class="text-2xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-history text-blue-500 mr-3"></i>
-                        Notas da Versão 2.0
-                    </h3>
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Integração com GitHub Pages:</h3>
+                <div class="output-area">
+# 1. Fork ou clone o repositório
+git clone https://github.com/Felipeleii/bioinfo-scripts.git
+cd bioinfo-scripts
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div>
-                            <h4 class="font-semibold text-green-600 dark:text-green-400 mb-3">
-                                <i class="fas fa-plus-circle mr-2"></i>Novidades
-                            </h4>
-                            <ul class="space-y-2 text-gray-600 dark:text-gray-300">
-                                <li>• Sistema de gerenciamento centralizado</li>
-                                <li>• Interface gráfica Bactopia otimizada</li>
-                                <li>• Validação robusta de entrada</li>
-                                <li>• Logging detalhado e colorido</li>
-                                <li>• Backup automático de arquivos</li>
-                                <li>• Modo dry-run para testes</li>
-                                <li>• Suporte a múltiplos formatos</li>
-                            </ul>
-                        </div>
+# 2. Crie uma branch gh-pages
+git checkout -b gh-pages
 
-                        <div>
-                            <h4 class="font-semibold text-blue-600 dark:text-blue-400 mb-3">
-                                <i class="fas fa-wrench mr-2"></i>Melhorias
-                            </h4>
-                            <ul class="space-y-2 text-gray-600 dark:text-gray-300">
-                                <li>• Performance otimizada (até 3x mais rápido)</li>
-                                <li>• Detecção automática de conflitos</li>
-                                <li>• Argumentos via linha de comando</li>
-                                <li>• Documentação integrada (--help)</li>
-                                <li>• Tratamento de erros aprimorado</li>
-                                <li>• Compatibilidade cross-platform</li>
-                                <li>• Código mais limpo e modular</li>
-                            </ul>
-                        </div>
-                    </div>
+# 3. Adicione o arquivo index.html (este site)
+# Copie todo o conteúdo HTML para index.html
 
-                    <div class="mt-8 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
-                        <p class="text-blue-800 dark:text-blue-200">
-                            <i class="fas fa-info-circle mr-2"></i>
-                            <strong>Compatibilidade:</strong> Scripts v1.x podem ser migrados automaticamente usando o comando 
-                            <code class="bg-blue-200 dark:bg-blue-800 px-2 py-1 rounded">bioinfo_manager.py migrate</code>
-                        </p>
-                    </div>
+# 4. Commit e push
+git add index.html
+git commit -m "Add unified bioinfo scripts website"
+git push origin gh-pages
+
+# 5. Ative GitHub Pages nas configurações do repositório
+# Settings → Pages → Source: gh-pages branch
+
+# Seu site estará disponível em:
+# https://felipeleii.github.io/bioinfo-scripts/
+                </div>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Estrutura Recomendada do Repositório:</h3>
+                <div class="output-area">
+bioinfo-scripts/
+├── index.html              # Este arquivo (site principal)
+├── README.md               # Documentação do projeto
+├── LICENSE                 # Licença (MIT recomendada)
+├── environment.yml         # Dependências Conda
+├── requirements.txt        # Dependências Python
+│
+├── scripts/                # Scripts principais
+│   ├── quality_control/
+│   │   ├── fastq_qc.sh
+│   │   ├── multiqc_runner.py
+│   │   └── trim_adapters.sh
+│   │
+│   ├── assembly/
+│   │   ├── spades_assembly.sh
+│   │   ├── unicycler_hybrid.sh
+│   │   └── assembly_stats.py
+│   │
+│   ├── annotation/
+│   │   ├── prokka_batch.sh
+│   │   ├── bakta_annotate.sh
+│   │   └── extract_genes.py
+│   │
+│   └── utilities/
+│       ├── multifasta_generator.py
+│       ├── bactopia_prepare.py
+│       └── fastq_stats.py
+│
+├── examples/               # Arquivos de exemplo
+│   ├── sample_data/
+│   └── tutorials/
+│
+└── docs/                   # Documentação adicional
+    ├── installation.md
+    ├── usage_guide.md
+    └── troubleshooting.md
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="container mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <!-- Brand -->
-                <div class="md:col-span-2">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <i class="fas fa-dna text-3xl text-blue-400"></i>
-                        <span class="text-2xl font-bold">Bioinfo Scripts v2.0</span>
-                    </div>
-                    <p class="text-gray-300 mb-4">
-                        Coleção otimizada de ferramentas para análise de dados de bioinformática,
-                        com foco em WGS bacteriano e automação de pipelines.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="https://github.com/Felipeleii/bioinfo-scripts" class="text-gray-300 hover:text-white transition-colors">
-                            <i class="fab fa-github text-2xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-300 hover:text-white transition-colors">
-                            <i class="fab fa-linkedin text-2xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-300 hover:text-white transition-colors">
-                            <i class="fas fa-envelope text-2xl"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Quick Links -->
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Links Rápidos</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#home" class="text-gray-300 hover:text-white transition-colors">Início</a></li>
-                        <li><a href="#tools" class="text-gray-300 hover:text-white transition-colors">Ferramentas</a></li>
-                        <li><a href="#documentation" class="text-gray-300 hover:text-white transition-colors">Documentação</a></li>
-                        <li><a href="#download" class="text-gray-300 hover:text-white transition-colors">Download</a></li>
-                    </ul>
-                </div>
-
-                <!-- Resources -->
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Recursos</h4>
-                    <ul class="space-y-2">
-                        <li><a href="https://github.com/Felipeleii/bioinfo-scripts/issues" class="text-gray-300 hover:text-white transition-colors">Reportar Bug</a></li>
-                        <li><a href="https://github.com/Felipeleii/bioinfo-scripts/discussions" class="text-gray-300 hover:text-white transition-colors">Discussões</a></li>
-                        <li><a href="https://github.com/Felipeleii/bioinfo-scripts/wiki" class="text-gray-300 hover:text-white transition-colors">Wiki</a></li>
-                        <li><a href="https://github.com/Felipeleii/bioinfo-scripts/releases" class="text-gray-300 hover:text-white transition-colors">Releases</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
-                <p class="text-gray-300">
-                    © 2025 Felipe Lei. Desenvolvido com <i class="fas fa-heart text-red-500"></i> para a comunidade de bioinformática.
-                </p>
-                <p class="text-gray-400 text-sm mt-2">
-                    Licenciado sob MIT License. Código aberto e gratuito para uso acadêmico e comercial.
-                </p>
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Bioinfo Scripts v3.0. Desenvolvido com <i class="fas fa-heart" style="color: var(--error-color);"></i> para a comunidade de bioinformática.</p>
+            <div class="social-links">
+                <a href="https://github.com/Felipeleii/bioinfo-scripts" target="_blank" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="#" title="Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
+                <a href="#" title="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
             </div>
         </div>
     </footer>
 
-    <!-- Code Example Modal -->
-    <div id="code-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-xl max-w-4xl max-h-[90vh] overflow-auto">
-            <div class="sticky top-0 bg-white dark:bg-gray-800 p-6 border-b border-gray-200 dark:border-gray-700">
-                <div class="flex items-center justify-between">
-                    <h3 id="modal-title" class="text-2xl font-bold">Exemplo de Código</h3>
-                    <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                        <i class="fas fa-times text-2xl"></i>
-                    </button>
-                </div>
-            </div>
-            <div id="modal-content" class="p-6">
-                <!-- Content loaded dynamically -->
-            </div>
-        </div>
-    </div>
-
     <!-- JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
-    
     <script>
-        // Theme Toggle
-        const themeToggle = document.getElementById('theme-toggle');
-        const html = document.documentElement;
-        
-        // Check saved theme or default to light
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        html.classList.toggle('dark', savedTheme === 'dark');
-        
-        themeToggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            const theme = html.classList.contains('dark') ? 'dark' : 'light';
-            localStorage.setItem('theme', theme);
+        // Mobile menu toggle
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        // Tab switching
+        function switchTab(tabName, element) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => tab.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            element.classList.add('active');
+        }
+
+        // MultiFASTA Generator Functions
+        document.getElementById('singleFastaForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('fastaFile');
+            const file = fileInput.files[0];
+            const prefix = document.getElementById('samplePrefix').value || file.name.replace(/\.[^/.]+$/, "");
+            
+            showProgress('fastaProgress');
+            
+            try {
+                const content = await readFile(file);
+                const processed = processFasta(content, prefix);
+                displayOutput('fastaOutput', processed);
+                showActions('fastaActions');
+                updateProgress('fastaProgressBar', 100);
+            } catch (error) {
+                showAlert('Erro ao processar arquivo: ' + error.message, 'error');
+            }
         });
 
-        // Mobile Menu
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+        document.getElementById('batchFastaForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const filesInput = document.getElementById('fastaFiles');
+            const files = Array.from(filesInput.files);
+            const mergeOption = document.getElementById('mergeOption').value;
+            
+            showProgress('fastaProgress');
+            
+            try {
+                let allProcessed = [];
+                let currentProgress = 0;
+                const progressStep = 100 / files.length;
+                
+                for (const file of files) {
+                    const content = await readFile(file);
+                    const prefix = file.name.replace(/\.[^/.]+$/, "");
+                    const processed = processFasta(content, prefix);
+                    
+                    if (mergeOption === 'merge') {
+                        allProcessed.push(processed);
+                    } else {
+                        // Handle separate files - in a real implementation, you'd save each file
+                        allProcessed.push(`=== ${file.name} ===\n${processed}\n`);
+                    }
+                    
+                    currentProgress += progressStep;
+                    updateProgress('fastaProgressBar', Math.round(currentProgress));
+                }
+                
+                const finalOutput = allProcessed.join('\n');
+                displayOutput('fastaOutput', finalOutput);
+                showActions('fastaActions');
+            } catch (error) {
+                showAlert('Erro ao processar arquivos: ' + error.message, 'error');
+            }
         });
 
-        // Smooth Scrolling
+        function processFasta(content, prefix) {
+            const lines = content.split('\n');
+            let processed = [];
+            let contigCounter = 1;
+            
+            for (let line of lines) {
+                if (line.startsWith('>')) {
+                    // Extract original contig name
+                    const originalName = line.substring(1).trim();
+                    // Create new header with sample prefix
+                    const newHeader = `>${prefix}_contig${contigCounter}_${originalName}`;
+                    processed.push(newHeader);
+                    contigCounter++;
+                } else {
+                    processed.push(line);
+                }
+            }
+            
+            return processed.join('\n');
+        }
+
+        // Bactopia Prepare Functions
+        document.getElementById('bactopiaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const projectName = document.getElementById('projectName').value;
+            const fastqDir = document.getElementById('fastqDir').value;
+            const sampleSheet = document.getElementById('sampleSheet').value;
+            
+            const config = generateBactopiaConfig({
+                projectName,
+                fastqDir,
+                sampleSheet,
+                qc: document.getElementById('qc').checked,
+                assembly: document.getElementById('assembly').checked,
+                annotation: document.getElementById('annotation').checked,
+                mlst: document.getElementById('mlst').checked,
+                amr: document.getElementById('amr').checked
+            });
+            
+            displayOutput('bactopiaOutput', config);
+            showActions('bactopiaActions');
+        });
+
+        function generateBactopiaConfig(params) {
+            let config = `# Bactopia Configuration\n`;
+            config += `# Project: ${params.projectName}\n`;
+            config += `# Generated: ${new Date().toISOString()}\n\n`;
+            
+            config += `# Input Configuration\n`;
+            config += `fastq_dir: ${params.fastqDir}\n`;
+            config += `project_name: ${params.projectName}\n\n`;
+            
+            config += `# Sample Sheet\n`;
+            config += `# Save this section as 'samples.txt'\n`;
+            config += params.sampleSheet + '\n\n';
+            
+            config += `# Pipeline Parameters\n`;
+            if (params.qc) config += `--qc\n`;
+            if (params.assembly) config += `--assembly\n`;
+            if (params.annotation) config += `--annotation\n`;
+            if (params.mlst) config += `--mlst\n`;
+            if (params.amr) config += `--amr\n`;
+            
+            return config;
+        }
+
+        function generateBactopiaCommand() {
+            const projectName = document.getElementById('projectName').value;
+            const fastqDir = document.getElementById('fastqDir').value;
+            
+            let command = `bactopia \\\n`;
+            command += `  --fastqs ${fastqDir} \\\n`;
+            command += `  --samples samples.txt \\\n`;
+            command += `  --outdir ${projectName}_results \\\n`;
+            command += `  --cpus 8 \\\n`;
+            command += `  --max_memory 32g`;
+            
+            displayOutput('bactopiaOutput', command);
+        }
+
+        // Utility Functions
+        async function readFile(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = e => resolve(e.target.result);
+                reader.onerror = reject;
+                reader.readAsText(file);
+            });
+        }
+
+        function showProgress(containerId) {
+            document.getElementById(containerId).style.display = 'block';
+        }
+
+        function updateProgress(barId, percent) {
+            const bar = document.getElementById(barId);
+            bar.style.width = percent + '%';
+            bar.textContent = percent + '%';
+        }
+
+        function displayOutput(outputId, content) {
+            const output = document.getElementById(outputId);
+            output.textContent = content;
+            output.style.display = 'block';
+        }
+
+        function showActions(actionsId) {
+            document.getElementById(actionsId).style.display = 'block';
+        }
+
+        function downloadFasta() {
+            const content = document.getElementById('fastaOutput').textContent;
+            downloadFile(content, 'processed_multifasta.fasta', 'text/plain');
+        }
+
+        function downloadBactopiaConfig() {
+            const content = document.getElementById('bactopiaOutput').textContent;
+            downloadFile(content, 'bactopia_config.txt', 'text/plain');
+        }
+
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function copyToClipboard(elementId) {
+            const content = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                showAlert('Copiado para a área de transferência!', 'success');
+            }).catch(err => {
+                showAlert('Erro ao copiar: ' + err.message, 'error');
+            });
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+            `;
+            
+            const firstSection = document.querySelector('.section');
+            firstSection.insertBefore(alertDiv, firstSection.firstChild);
+            
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        // Smooth scrolling for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             });
         });
 
-        // Tool Category Filtering
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const toolCards = document.querySelectorAll('.tool-card');
-
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const category = btn.dataset.category;
-                
-                // Update active tab
-                tabBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                // Filter cards
-                toolCards.forEach(card => {
-                    const cardCategory = card.dataset.category;
-                    if (category === 'all' || cardCategory === category) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            });
-        });
-
-        // Example Tabs
-        const exampleTabs = document.querySelectorAll('.example-tab');
-        const exampleContents = document.querySelectorAll('.example-content');
-
-        exampleTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const target = tab.dataset.target;
-                
-                // Update active tab
-                exampleTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                // Show target content
-                exampleContents.forEach(content => {
-                    if (content.id === target) {
-                        content.classList.remove('hidden');
-                    } else {
-                        content.classList.add('hidden');
-                    }
-                });
-            });
-        });
-
-        // Copy to Clipboard
-        function copyToClipboard(button, text) {
-            navigator.clipboard.writeText(text).then(() => {
-                const icon = button.querySelector('i');
-                const originalClass = icon.className;
-                icon.className = 'fas fa-check text-green-500';
-                setTimeout(() => {
-                    icon.className = originalClass;
-                }, 2000);
-            });
-        }
-
-        // Count Animation
-        function animateCounter(element) {
-            const target = parseInt(element.dataset.count);
-            const duration = 2000;
-            const start = 0;
-            const increment = target / (duration / 16);
-            let current = start;
+        // Update section navigation on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.section-nav a');
             
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
                 }
-                element.textContent = Math.floor(current);
-            }, 16);
-        }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
 
-        // Intersection Observer for Animations
+        // Add fade-in animation on scroll
         const observerOptions = {
             threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+            rootMargin: '0px 0px -100px 0px'
         };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    
-                    // Animate counters
-                    const counters = entry.target.querySelectorAll('[data-count]');
-                    counters.forEach(counter => {
-                        if (!counter.classList.contains('animated')) {
-                            counter.classList.add('animated');
-                            animateCounter(counter);
-                        }
-                    });
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
                 }
             });
         }, observerOptions);
 
-        // Observe elements
-        document.querySelectorAll('.fade-in-up').forEach(el => {
-            observer.observe(el);
+        // Observe all cards
+        document.querySelectorAll('.card, .tool-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
         });
 
-        // Code Examples
-        const codeExamples = {
-            fastq_renamer: {
-                title: 'FASTQ Renamer - Exemplo Completo',
-                content: `
-                    <div class="space-y-6">
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Uso Básico</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python fastq_renamer.py /dados/fastq --pattern first_last')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code># Renomeia mantendo primeiro e último campo
-python fastq_renamer.py /dados/fastq --pattern first_last
-
-# Exemplo de conversão:
-# N1_010_1.fastq.gz → N1_1.fastq.gz
-# S2_078_2.fastq.gz → S2_2.fastq.gz</code></pre>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Opções Avançadas</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python fastq_renamer.py /dados/fastq --recursive --backup --dry-run --verbose')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code># Busca recursiva com backup e modo teste
-python fastq_renamer.py /dados/fastq \\
-    --recursive \\
-    --backup \\
-    --dry-run \\
-    --verbose
-
-# Padrão alternativo (apenas primeiro campo)
-python fastq_renamer.py /dados/fastq --pattern first_only</code></pre>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Parâmetros Disponíveis</h4>
-                            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                                <table class="w-full text-sm">
-                                    <tr><td class="font-mono text-blue-600">--pattern</td><td>first_last | first_only</td></tr>
-                                    <tr><td class="font-mono text-blue-600">--recursive</td><td>Busca em subdiretórios</td></tr>
-                                    <tr><td class="font-mono text-blue-600">--backup</td><td>Cria backup dos nomes originais</td></tr>
-                                    <tr><td class="font-mono text-blue-600">--dry-run</td><td>Simula operações sem executar</td></tr>
-                                    <tr><td class="font-mono text-blue-600">--verbose</td><td>Saída detalhada</td></tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            fasta_renamer: {
-                title: 'FASTA Renamer - Exemplo Completo',
-                content: `
-                    <div class="space-y-6">
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Diferentes Padrões</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python fasta_renamer.py /dados/fasta --pattern first_only')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code># Padrão first_only
-python fasta_renamer.py /dados/fasta --pattern first_only
-# HSP1_001_Klebsiella_pneumoniae.fasta → HSP1.fasta
-
-# Padrão first_two  
-python fasta_renamer.py /dados/fasta --pattern first_two
-# HSP1_001_Klebsiella_pneumoniae.fasta → HSP1_001.fasta
-
-# Padrão species_format
-python fasta_renamer.py /dados/fasta --pattern species_format
-# HSP1_001_Klebsiella_pneumoniae.fasta → HSP1_001.fasta</code></pre>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Gerenciamento de Conflitos</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python fasta_renamer.py /dados/fasta --backup --force')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code># Com backup e força para sobrescrever
-python fasta_renamer.py /dados/fasta --backup --force
-
-# Verificar conflitos antes de executar
-python fasta_renamer.py /dados/fasta --dry-run
-
-# Adicionar sufixo customizado
-python fasta_renamer.py /dados/fasta --custom-suffix "_processed"</code></pre>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            contig_separator: {
-                title: 'Contig Separator - Exemplo Completo',
-                content: `
-                    <div class="space-y-6">
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Separação Básica</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python contig_separator.py assembly.fasta output_dir/')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code># Separar contigs automaticamente
-python contig_separator.py assembly.fasta output_dir/
-
-# Análise apenas (sem separar)
-python contig_separator.py assembly.fasta output_dir/ --analyze-only</code></pre>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Filtros e Padrões Customizados</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python contig_separator.py assembly.fasta output_dir/ --min-length 500 --max-length 10000')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code># Com filtros de tamanho
-python contig_separator.py assembly.fasta output_dir/ \\
-    --min-length 500 \\
-    --max-length 10000
-
-# Padrão regex customizado
-python contig_separator.py assembly.fasta output_dir/ \\
-    --custom-pattern "(isolado_\\d+)"
-
-# Saída em formato GenBank
-python contig_separator.py assembly.fasta output_dir/ \\
-    --output-format genbank</code></pre>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Padrões de ID Suportados</h4>
-                            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                                <ul class="space-y-2 text-sm">
-                                    <li><strong>Standard:</strong> S10_005, N3_007, T15_002</li>
-                                    <li><strong>Extended:</strong> HSP1_001, HGPE_045</li>
-                                    <li><strong>Simple:</strong> S10, N3, T15</li>
-                                    <li><strong>Custom:</strong> isolado1, sample_001</li>
-                                    <li><strong>Generic:</strong> qualquer letra + números</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            bactopia_gui: {
-                title: 'Bactopia GUI - Interface Completa',
-                content: `
-                    <div class="space-y-6">
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Instalação e Execução</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'pip install pandas\\nsudo apt install python3-tk\\npython bactopia_gui.py')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code># Instalar dependências
-pip install pandas
-sudo apt install python3-tk  # Ubuntu/Debian
-
-# Executar GUI
-python bactopia_gui.py</code></pre>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Funcionalidades da Interface</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg">
-                                    <h5 class="font-semibold text-blue-800 dark:text-blue-200 mb-2">Aba Configuração</h5>
-                                    <ul class="text-sm text-blue-700 dark:text-blue-300 space-y-1">
-                                        <li>• Seleção de diretórios</li>
-                                        <li>• Configuração de espécies</li>
-                                        <li>• Recursos computacionais</li>
-                                        <li>• Opções de execução</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="bg-green-50 dark:bg-green-900 p-4 rounded-lg">
-                                    <h5 class="font-semibold text-green-800 dark:text-green-200 mb-2">Aba Amostras</h5>
-                                    <ul class="text-sm text-green-700 dark:text-green-300 space-y-1">
-                                        <li>• Auto-detecção paired-end</li>
-                                        <li>• Edição manual de amostras</li>
-                                        <li>• Exportação para CSV</li>
-                                        <li>• Validação de arquivos</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="bg-purple-50 dark:bg-purple-900 p-4 rounded-lg">
-                                    <h5 class="font-semibold text-purple-800 dark:text-purple-200 mb-2">Aba Execução</h5>
-                                    <ul class="text-sm text-purple-700 dark:text-purple-300 space-y-1">
-                                        <li>• Geração automática de comandos</li>
-                                        <li>• Execução direta do Bactopia</li>
-                                        <li>• Monitoramento de progresso</li>
-                                        <li>• Controle de processos</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="bg-orange-50 dark:bg-orange-900 p-4 rounded-lg">
-                                    <h5 class="font-semibold text-orange-800 dark:text-orange-200 mb-2">Aba Log</h5>
-                                    <ul class="text-sm text-orange-700 dark:text-orange-300 space-y-1">
-                                        <li>• Log em tempo real</li>
-                                        <li>• Histórico de operações</li>
-                                        <li>• Exportação de logs</li>
-                                        <li>• Diagnóstico de erros</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Fluxo de Trabalho Típico</h4>
-                            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                                <ol class="space-y-2 text-sm">
-                                    <li><strong>1.</strong> Selecionar diretório com arquivos FASTQ</li>
-                                    <li><strong>2.</strong> Configurar espécie e tamanho do genoma</li>
-                                    <li><strong>3.</strong> Escanear e validar amostras</li>
-                                    <li><strong>4.</strong> Gerar arquivo metadata.txt</li>
-                                    <li><strong>5.</strong> Executar Bactopia automaticamente</li>
-                                    <li><strong>6.</strong> Monitorar progresso via log</li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            tools_manager: {
-                title: 'Tools Manager - Sistema Centralizado',
-                content: `
-                    <div class="space-y-6">
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Comandos Principais</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python bioinfo_manager.py setup\\npython bioinfo_manager.py list\\npython bioinfo_manager.py run fastq_renamer --help')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code># Configurar ambiente inicial
-python bioinfo_manager.py setup
-
-# Listar todas as ferramentas
-python bioinfo_manager.py list
-
-# Listar por categoria
-python bioinfo_manager.py list --category file_management
-
-# Executar ferramenta
-python bioinfo_manager.py run fastq_renamer /dados --dry-run
-
-# Ver ajuda de ferramenta específica
-python bioinfo_manager.py help contig_separator</code></pre>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Setup Automático</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'python bioinfo_manager.py setup')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code># O comando setup automaticamente:
-# ✓ Verifica versão do Python
-# ✓ Instala dependências Python
-# ✓ Verifica ferramentas externas (Docker, Nextflow)
-# ✓ Cria estrutura de diretórios
-# ✓ Gera arquivo de configuração
-
-python bioinfo_manager.py setup</code></pre>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Categorias de Ferramentas</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-blue-50 dark:bg-blue-900 p-3 rounded">
-                                    <h5 class="font-semibold text-blue-800 dark:text-blue-200">file_management</h5>
-                                    <p class="text-sm text-blue-600 dark:text-blue-300">Gestão e renomeação de arquivos</p>
-                                </div>
-                                <div class="bg-green-50 dark:bg-green-900 p-3 rounded">
-                                    <h5 class="font-semibold text-green-800 dark:text-green-200">sequence_analysis</h5>
-                                    <p class="text-sm text-green-600 dark:text-green-300">Análise e processamento de sequências</p>
-                                </div>
-                                <div class="bg-purple-50 dark:bg-purple-900 p-3 rounded">
-                                    <h5 class="font-semibold text-purple-800 dark:text-purple-200">pipeline</h5>
-                                    <p class="text-sm text-purple-600 dark:text-purple-300">Pipelines e workflows automatizados</p>
-                                </div>
-                                <div class="bg-orange-50 dark:bg-orange-900 p-3 rounded">
-                                    <h5 class="font-semibold text-orange-800 dark:text-orange-200">quality_control</h5>
-                                    <p class="text-sm text-orange-600 dark:text-orange-300">Controle de qualidade de dados</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            assembly_renamer: {
-                title: 'Assembly Renamer - Renomeação Especializada',
-                content: `
-                    <div class="space-y-6">
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">PowerShell (Windows)</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, '.\\\\assembly_renamer.ps1')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code># Executar script PowerShell
-.\\assembly_renamer.ps1
-
-# O script automaticamente:
-# - Processa todas as pastas com padrão "Staphylococcus aureus amostra X"
-# - Extrai número da amostra (trata casos como 16.1, 115_, 18denovo)
-# - Formata com 3 dígitos (008, 016, 115)
-# - Copia para K:\\FASTAs_Renomeados\\SA_XXX.fasta</code></pre>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Bash (WSL/Linux)</h4>
-                            <div class="code-block bg-gray-800 text-green-400 p-4 rounded-lg relative">
-                                <button class="copy-button btn-sm bg-gray-700" onclick="copyToClipboard(this, 'chmod +x assembly_renamer.sh\\n./assembly_renamer.sh')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                                <pre><code># Tornar executável e executar
-chmod +x assembly_renamer.sh
-./assembly_renamer.sh
-
-# Caminhos ajustados para WSL:
-# /mnt/k/downloads/SA (origem)
-# /mnt/k/FASTAs_Renomeados (destino)</code></pre>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h4 class="text-lg font-semibold mb-3">Exemplos de Conversão</h4>
-                            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                                <table class="w-full text-sm">
-                                    <thead>
-                                        <tr class="border-b border-gray-300 dark:border-gray-600">
-                                            <th class="text-left py-2">Pasta Original</th>
-                                            <th class="text-left py-2">Arquivo Final</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="space-y-1">
-                                        <tr><td class="py-1">Staphylococcus aureus amostra 08</td><td class="py-1">SA_008.fasta</td></tr>
-                                        <tr><td class="py-1">Staphylococcus aureus amostra 16.1</td><td class="py-1">SA_161.fasta</td></tr>
-                                        <tr><td class="py-1">Staphylococcus aureus amostra 115_</td><td class="py-1">SA_115.fasta</td></tr>
-                                        <tr><td class="py-1">Staphylococcus aureus amostra18denovo</td><td class="py-1">SA_018.fasta</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                `
-            }
-        };
-
-        // Show Code Example Modal
-        function showCodeExample(toolId) {
-            const modal = document.getElementById('code-modal');
-            const title = document.getElementById('modal-title');
-            const content = document.getElementById('modal-content');
+        // FASTQ Statistics Calculator
+        document.getElementById('fastqStatsForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            if (codeExamples[toolId]) {
-                title.textContent = codeExamples[toolId].title;
-                content.innerHTML = codeExamples[toolId].content;
-                modal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
-        // Close Modal
-        function closeModal() {
-            const modal = document.getElementById('code-modal');
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Download Script
-        function downloadScript(filename) {
-            // Simulate download - in real implementation, this would link to actual files
-            const baseUrl = 'https://raw.githubusercontent.com/Felipeleii/bioinfo-scripts/main/';
-            const link = document.createElement('a');
-            link.href = baseUrl + filename;
-            link.download = filename;
-            link.target = '_blank';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('code-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'code-modal') {
-                closeModal();
+            const fileInput = document.getElementById('fastqFile');
+            const file = fileInput.files[0];
+            
+            document.getElementById('fastqSpinner').style.display = 'block';
+            document.getElementById('fastqStatsOutput').style.display = 'none';
+            
+            try {
+                const stats = await calculateFastqStats(file);
+                displayFastqStats(stats);
+                createCharts(stats);
+                document.getElementById('fastqStatsOutput').style.display = 'block';
+            } catch (error) {
+                showAlert('Erro ao processar arquivo FASTQ: ' + error.message, 'error');
+            } finally {
+                document.getElementById('fastqSpinner').style.display = 'none';
             }
         });
 
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
-        });
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            // Trigger initial fade-in animations
-            setTimeout(() => {
-                document.querySelectorAll('.fade-in-up').forEach(el => {
-                    if (el.getBoundingClientRect().top < window.innerHeight) {
-                        el.classList.add('visible');
+        async function calculateFastqStats(file) {
+            const content = await readFile(file);
+            const lines = content.split('\n');
+            
+            let totalReads = 0;
+            let totalBases = 0;
+            let gcCount = 0;
+            let lengths = [];
+            let qualities = [];
+            
+            // Process FASTQ file (4 lines per read)
+            for (let i = 0; i < lines.length; i += 4) {
+                if (i + 3 >= lines.length) break;
+                
+                const header = lines[i];
+                const sequence = lines[i + 1];
+                const plus = lines[i + 2];
+                const quality = lines[i + 3];
+                
+                if (header.startsWith('@') && plus === '+') {
+                    totalReads++;
+                    const seqLength = sequence.length;
+                    totalBases += seqLength;
+                    lengths.push(seqLength);
+                    
+                    // Count GC content
+                    const gcInSeq = (sequence.match(/[GC]/gi) || []).length;
+                    gcCount += gcInSeq;
+                    
+                    // Calculate average quality score
+                    let qualSum = 0;
+                    for (let j = 0; j < quality.length; j++) {
+                        qualSum += quality.charCodeAt(j) - 33; // Phred+33 encoding
                     }
-                });
-            }, 100);
-        });
+                    qualities.push(qualSum / quality.length);
+                }
+            }
+            
+            // Calculate statistics
+            lengths.sort((a, b) => b - a);
+            const n50 = calculateN50(lengths, totalBases);
+            const avgLength = totalBases / totalReads;
+            const gcContent = (gcCount / totalBases * 100).toFixed(2);
+            const avgQuality = (qualities.reduce((a, b) => a + b, 0) / qualities.length).toFixed(1);
+            
+            return {
+                totalReads,
+                totalBases,
+                avgLength: Math.round(avgLength),
+                gcContent,
+                avgQuality,
+                n50,
+                lengths,
+                qualities
+            };
+        }
+
+        function calculateN50(lengths, totalBases) {
+            let sum = 0;
+            const halfTotal = totalBases / 2;
+            
+            for (let length of lengths) {
+                sum += length;
+                if (sum >= halfTotal) {
+                    return length;
+                }
+            }
+            return 0;
+        }
+
+        function displayFastqStats(stats) {
+            document.getElementById('totalReads').textContent = stats.totalReads.toLocaleString();
+            document.getElementById('totalBases').textContent = stats.totalBases.toLocaleString();
+            document.getElementById('avgLength').textContent = stats.avgLength.toLocaleString() + ' bp';
+            document.getElementById('gcContent').textContent = stats.gcContent + '%';
+            document.getElementById('avgQuality').textContent = stats.avgQuality;
+            document.getElementById('n50').textContent = stats.n50.toLocaleString() + ' bp';
+        }
+
+        function createCharts(stats) {
+            // Create length distribution histogram
+            const lengthBins = createHistogram(stats.lengths, 20);
+            createBarChart('lengthChart', 'Comprimento (bp)', lengthBins);
+            
+            // Create quality distribution histogram
+            const qualityBins = createHistogram(stats.qualities, 20);
+            createBarChart('qualityChart', 'Qualidade Média', qualityBins);
+        }
+
+        function createHistogram(data, numBins) {
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const binWidth = (max - min) / numBins;
+            const bins = new Array(numBins).fill(0);
+            const labels = [];
+            
+            for (let i = 0; i < numBins; i++) {
+                const binStart = min + i * binWidth;
+                const binEnd = binStart + binWidth;
+                labels.push(`${Math.round(binStart)}-${Math.round(binEnd)}`);
+                
+                for (let value of data) {
+                    if (value >= binStart && value < binEnd) {
+                        bins[i]++;
+                    }
+                }
+            }
+            
+            return { labels, data: bins };
+        }
+
+        function createBarChart(canvasId, label, histData) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Simple bar chart implementation
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = 300;
+            const padding = 40;
+            const barWidth = (width - 2 * padding) / histData.labels.length;
+            const maxValue = Math.max(...histData.data);
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw bars
+            ctx.fillStyle = '#1976D2';
+            histData.data.forEach((value, index) => {
+                const barHeight = (value / maxValue) * (height - 2 * padding);
+                const x = padding + index * barWidth;
+                const y = height - padding - barHeight;
+                
+                ctx.fillRect(x, y, barWidth * 0.8, barHeight);
+            });
+            
+            // Draw axes
+            ctx.strokeStyle = '#666';
+            ctx.beginPath();
+            ctx.moveTo(padding, padding);
+            ctx.lineTo(padding, height - padding);
+            ctx.lineTo(width - padding, height - padding);
+            ctx.stroke();
+            
+            // Add label
+            ctx.fillStyle = '#fff';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(label, width / 2, height - 10);
+        }
+
+        function downloadFastqReport() {
+            const stats = {
+                totalReads: document.getElementById('totalReads').textContent,
+                totalBases: document.getElementById('totalBases').textContent,
+                avgLength: document.getElementById('avgLength').textContent,
+                gcContent: document.getElementById('gcContent').textContent,
+                avgQuality: document.getElementById('avgQuality').textContent,
+                n50: document.getElementById('n50').textContent
+            };
+            
+            let report = `FASTQ Statistics Report\n`;
+            report += `Generated: ${new Date().toISOString()}\n\n`;
+            report += `Total Reads: ${stats.totalReads}\n`;
+            report += `Total Bases: ${stats.totalBases}\n`;
+            report += `Average Length: ${stats.avgLength}\n`;
+            report += `GC Content: ${stats.gcContent}\n`;
+            report += `Average Quality: ${stats.avgQuality}\n`;
+            report += `N50: ${stats.n50}\n`;
+            
+            downloadFile(report, 'fastq_stats_report.txt', 'text/plain');
+        }
+
+        // Enhanced Bactopia command generator
+        function generateBactopiaCommand() {
+            const projectName = document.getElementById('projectName').value;
+            const fastqDir = document.getElementById('fastqDir').value;
+            
+            let command = `#!/bin/bash\n\n`;
+            command += `# Bactopia Pipeline Command\n`;
+            command += `# Project: ${projectName}\n`;
+            command += `# Generated: ${new Date().toISOString()}\n\n`;
+            
+            command += `# Create output directory\n`;
+            command += `mkdir -p ${projectName}_results\n\n`;
+            
+            command += `# Run Bactopia\n`;
+            command += `bactopia \\\n`;
+            command += `  --fastqs ${fastqDir} \\\n`;
+            command += `  --samples samples.txt \\\n`;
+            command += `  --outdir ${projectName}_results \\\n`;
+            command += `  --cpus 8 \\\n`;
+            command += `  --max_memory 32g`;
+            
+            if (document.getElementById('qc').checked) command += ` \\\n  --qc`;
+            if (document.getElementById('assembly').checked) command += ` \\\n  --assembly`;
+            if (document.getElementById('annotation').checked) command += ` \\\n  --annotation`;
+            if (document.getElementById('mlst').checked) command += ` \\\n  --mlst`;
+            if (document.getElementById('amr').checked) command += ` \\\n  --amr`;
+            
+            command += `\n\n# Check results\n`;
+            command += `echo "Pipeline completed! Check results in ${projectName}_results/"\n`;
+            
+            displayOutput('bactopiaOutput', command);
+        }
     </script>
 </body>
-</html>="fas fa-check text-green-500 mr-2"></i>Padrões first_last e first_only</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Modo dry-run para testes</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Backup automático</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Busca recursiva</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="flex gap-2">
-                            <button class="btn-sm btn-primary" onclick="showCodeExample('fastq_renamer')">
-                                <i class="fas fa-code mr-1"></i>Exemplo
-                            </button>
-                            <button class="btn-sm btn-secondary" onclick="downloadScript('fastq_renamer.py')">
-                                <i class="fas fa-download mr-1"></i>Download
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- FASTA Renamer -->
-                <div class="tool-card" data-category="file_management">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 card-hover h-full">
-                        <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="fas fa-file-code text-purple-600 dark:text-purple-400 text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold">FASTA Renamer</h3>
-                                <div class="flex items-center">
-                                    <span class="pulse-dot w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                                    <span class="text-sm text-green-600">Otimizado</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <p class="text-gray-600 dark:text-gray-300 mb-4">
-                            Renomeia arquivos FASTA com múltiplos padrões. Detecção de conflitos, backup automático e validação.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="tag">Multi-formato</span>
-                            <span class="tag">Conflict Detection</span>
-                            <span class="tag">Backup</span>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <h4 class="font-semibold mb-2">Padrões Suportados:</h4>
-                            <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>first_only: HSP1_001.fasta → HSP1.fasta</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>first_two: HSP1_001_species → HSP1_001.fasta</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>species_format para nomenclatura científica</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="flex gap-2">
-                            <button class="btn-sm btn-primary" onclick="showCodeExample('fasta_renamer')">
-                                <i class="fas fa-code mr-1"></i>Exemplo
-                            </button>
-                            <button class="btn-sm btn-secondary" onclick="downloadScript('fasta_renamer.py')">
-                                <i class="fas fa-download mr-1"></i>Download
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Contig Separator -->
-                <div class="tool-card" data-category="sequence_analysis">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 card-hover h-full">
-                        <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="fas fa-cut text-green-600 dark:text-green-400 text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold">Contig Separator</h3>
-                                <div class="flex items-center">
-                                    <span class="pulse-dot w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                                    <span class="text-sm text-green-600">Otimizado</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <p class="text-gray-600 dark:text-gray-300 mb-4">
-                            Separa contigs de arquivos multi-FASTA por isolado. Análise estatística, filtros por tamanho e regex customizável.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="tag">BioPython</span>
-                            <span class="tag">Regex</span>
-                            <span class="tag">Statistics</span>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <h4 class="font-semibold mb-2">Recursos Avançados:</h4>
-                            <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Múltiplos padrões de ID (S10_005, HSP1_001)</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Filtros por tamanho min/max</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Relatório estatístico detalhado</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Saída FASTA ou GenBank</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="flex gap-2">
-                            <button class="btn-sm btn-primary" onclick="showCodeExample('contig_separator')">
-                                <i class="fas fa-code mr-1"></i>Exemplo
-                            </button>
-                            <button class="btn-sm btn-secondary" onclick="downloadScript('contig_separator.py')">
-                                <i class="fas fa-download mr-1"></i>Download
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Assembly Renamer -->
-                <div class="tool-card" data-category="file_management">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 card-hover h-full">
-                        <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="fas fa-puzzle-piece text-yellow-600 dark:text-yellow-400 text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold">Assembly Renamer</h3>
-                                <div class="flex items-center">
-                                    <span class="pulse-dot w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
-                                    <span class="text-sm text-blue-600">Novo</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <p class="text-gray-600 dark:text-gray-300 mb-4">
-                            Renomeia arquivos assembly_contigs.fasta usando nome da pasta. Formato padronizado para análises downstream.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="tag">PowerShell</span>
-                            <span class="tag">Bash</span>
-                            <span class="tag">Cross-platform</span>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <h4 class="font-semibold mb-2">Exemplo de Conversão:</h4>
-                            <div class="bg-gray-100 dark:bg-gray-700 p-3 rounded text-sm">
-                                <div class="text-red-600 dark:text-red-400">Antes:</div>
-                                <div class="font-mono text-xs mb-2">Staphylococcus aureus amostra 08/.assembly/assembly_contigs.fasta</div>
-                                <div class="text-green-600 dark:text-green-400">Depois:</div>
-                                <div class="font-mono text-xs">SA_008.fasta</div>
-                            </div>
-                        </div>
-                        
-                        <div class="flex gap-2">
-                            <button class="btn-sm btn-primary" onclick="showCodeExample('assembly_renamer')">
-                                <i class="fas fa-code mr-1"></i>Exemplo
-                            </button>
-                            <button class="btn-sm btn-secondary" onclick="downloadScript('assembly_renamer.py')">
-                                <i class="fas fa-download mr-1"></i>Download
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bactopia GUI -->
-                <div class="tool-card" data-category="pipeline">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 card-hover h-full">
-                        <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="fas fa-desktop text-indigo-600 dark:text-indigo-400 text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold">Bactopia GUI</h3>
-                                <div class="flex items-center">
-                                    <span class="pulse-dot w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                                    <span class="text-sm text-green-600">Otimizado</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <p class="text-gray-600 dark:text-gray-300 mb-4">
-                            Interface gráfica completa para Bactopia. Auto-detecção paired-end, configuração de recursos e execução automatizada.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="tag">Tkinter</span>
-                            <span class="tag">Nextflow</span>
-                            <span class="tag">Docker</span>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <h4 class="font-semibold mb-2">Interface Moderna:</h4>
-                            <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Abas organizadas (Config, Amostras, Execução)</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Auto-detecção FASTQ paired/single</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Log em tempo real</li>
-                                <li><i class="fas fa-check text-green-500 mr-2"></i>Configuração de recursos (CPU/RAM)</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="flex gap-2">
-                            <button class="btn-sm btn-primary" onclick="showCodeExample('bactopia_gui')">
-                                <i class="fas fa-code mr-1"></i>Exemplo
-                            </button>
-                            <button class="btn-sm btn-secondary" onclick="downloadScript('bactopia_gui.py')">
-                                <i class="fas fa-download mr-1"></i>Download
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tools Manager -->
-                <div class="tool-card" data-category="pipeline">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 card-hover h-full">
-                        <div class="flex items-center mb-4">
-                            <div class="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center mr-4">
-                                <i class="fas fa-toolbox text-red-600 dark:text-red-400 text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-xl font-bold">Tools Manager</h3>
-                                <div class="flex items-center">
-                                    <span class="pulse-dot w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
-                                    <span class="text-sm text-blue-600">Novo</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <p class="text-gray-600 dark:text-gray-300 mb-4">
-                            Sistema centralizado para gerenciar e executar todas as ferramentas. Setup automático de ambiente e configuração.
-                        </p>
-                        
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="tag">CLI</span>
-                            <span class="tag">Manager</span>
-                            <span class="tag">Setup</span>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <h4 class="font-semibold mb-2">Funcionalidades:</h4>
-                            <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                                <li><i class
+</html> 0.5rem;">
+                        <i class="fas fa-chevron-right" style="color: var(--secondary-color);"></i>
+                        <strong>fastq_quality.sh</strong> - Análise de qualidade com FastQC
+                    </li>
+                    <li style="margin-bottom:
