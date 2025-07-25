@@ -484,31 +484,74 @@
         <p>Ferramentas avançadas de bioinformática para análise de genomas bacterianos e sequenciamento Illumina</p>
     </section>
 
-    <!-- Tools Section -->
-    <section id="tools" class="section">
-        <h2 class="section-title">
-            <i class="fas fa-tools"></i>
-            Ferramentas Principais
-        </h2>
-        <div class="tools-grid">
-            <a href="multifasta.html" class="tool-card">
-                <i class="fas fa-file-alt tool-icon"></i>
-                <h3 class="tool-title">Gerador MultiFASTA</h3>
-                <p class="tool-description">Crie arquivos multiFASTA com rastreamento automático de origem das sequências</p>
-            </a>
-            <a href="bactopia.html" class="tool-card">
-                <i class="fas fa-bacteria tool-icon"></i>
-                <h3 class="tool-title">Bactopia Prepare GUI</h3>
-                <p class="tool-description">Interface gráfica para preparação de dados do pipeline Bactopia</p>
-            </a>
-            <a href="fastq-stats.html" class="tool-card">
-                <i class="fas fa-chart-line tool-icon"></i>
-                <h3 class="tool-title">FASTQ Stats Calculator</h3>
-                <p class="tool-description">Calcule estatísticas básicas de arquivos FASTQ (reads, qualidade, GC%)</p>
-            </a>
+    <!-- FASTQ Stats Calculator Section -->
+    <section id="fastq-stats" class="section">
+        <div class="card">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i>
+                FASTQ Statistics Calculator
+            </h2>
+            <p>Analise arquivos FASTQ e obtenha estatísticas detalhadas sobre suas sequências.</p>
+
+            <form id="fastqStatsForm">
+                <div class="form-group">
+                    <label for="fastqFile">Arquivo FASTQ:</label>
+                    <input type="file" id="fastqFile" accept=".fastq,.fq,.fastq.gz" required>
+                </div>
+                <button type="submit" class="btn">
+                    <i class="fas fa-calculator"></i>
+                    Calcular Estatísticas
+                </button>
+            </form>
+
+            <div class="spinner" id="fastqSpinner"></div>
+
+            <div id="fastqStatsOutput" style="display: none;">
+                <h3>Estatísticas do Arquivo:</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Total de Reads</h4>
+                        <p id="totalReads" style="font-size: 1.5rem; font-weight: bold;">-</p>
+                    </div>
+                    <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Total de Bases</h4>
+                        <p id="totalBases" style="font-size: 1.5rem; font-weight: bold;">-</p>
+                    </div>
+                    <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Comprimento Médio</h4>
+                        <p id="avgLength" style="font-size: 1.5rem; font-weight: bold;">-</p>
+                    </div>
+                    <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">GC Content (%)</h4>
+                        <p id="gcContent" style="font-size: 1.5rem; font-weight: bold;">-</p>
+                    </div>
+                    <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Qualidade Média</h4>
+                        <p id="avgQuality" style="font-size: 1.5rem; font-weight: bold;">-</p>
+                    </div>
+                    <div class="stat-card" style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                        <h4 style="color: var(--secondary-color); margin-bottom: 0.5rem;">N50</h4>
+                        <p id="n50" style="font-size: 1.5rem; font-weight: bold;">-</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h3>Distribuição de Comprimento de Reads</h3>
+                    <canvas id="lengthChart" style="max-height: 300px;"></canvas>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h3>Distribuição de Qualidade</h3>
+                    <canvas id="qualityChart" style="max-height: 300px;"></canvas>
+                </div>
+
+                <button class="btn btn-secondary" onclick="downloadFastqReport()" style="margin-top: 1rem;">
+                    <i class="fas fa-download"></i>
+                    Baixar Relatório
+                </button>
+            </div>
         </div>
     </section>
-
 </main>
 
 <!-- Footer -->
