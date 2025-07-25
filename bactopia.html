@@ -484,31 +484,83 @@
         <p>Ferramentas avançadas de bioinformática para análise de genomas bacterianos e sequenciamento Illumina</p>
     </section>
 
-    <!-- Tools Section -->
-    <section id="tools" class="section">
-        <h2 class="section-title">
-            <i class="fas fa-tools"></i>
-            Ferramentas Principais
-        </h2>
-        <div class="tools-grid">
-            <a href="multifasta.html" class="tool-card">
-                <i class="fas fa-file-alt tool-icon"></i>
-                <h3 class="tool-title">Gerador MultiFASTA</h3>
-                <p class="tool-description">Crie arquivos multiFASTA com rastreamento automático de origem das sequências</p>
-            </a>
-            <a href="bactopia.html" class="tool-card">
-                <i class="fas fa-bacteria tool-icon"></i>
-                <h3 class="tool-title">Bactopia Prepare GUI</h3>
-                <p class="tool-description">Interface gráfica para preparação de dados do pipeline Bactopia</p>
-            </a>
-            <a href="fastq-stats.html" class="tool-card">
-                <i class="fas fa-chart-line tool-icon"></i>
-                <h3 class="tool-title">FASTQ Stats Calculator</h3>
-                <p class="tool-description">Calcule estatísticas básicas de arquivos FASTQ (reads, qualidade, GC%)</p>
-            </a>
+    <section id="bactopia" class="section">
+        <div class="card">
+            <h2 class="section-title">
+                <i class="fas fa-bacteria"></i>
+                Bactopia Prepare GUI
+            </h2>
+            <p>Interface gráfica intuitiva para preparar dados de entrada para o pipeline Bactopia. Organize seus arquivos FASTQ e metadados facilmente.</p>
+
+            <form id="bactopiaForm">
+                <div class="form-group">
+                    <label for="projectName">Nome do Projeto:</label>
+                    <input type="text" id="projectName" required pattern="[A-Za-z0-9_]+" title="Somente letras, números e underscores são permitidos" placeholder="Ex: Ecoli_WGS_2024">
+                </div>
+
+                <div class="form-group">
+                    <label for="fastqDir">Diretório dos arquivos FASTQ:</label>
+                    <input type="text" id="fastqDir" placeholder="/caminho/para/fastq" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="genome">Genoma de Referência (opcional):</label>
+                    <input type="file" id="genome" accept=".fasta,.fa,.fna">
+                </div>
+
+                <div class="form-group">
+                    <label for="sampleSheet">Planilha de Amostras:</label>
+                    <textarea id="sampleSheet" placeholder="sample,fastq_1,fastq_2&#10;Sample1,sample1_R1.fastq.gz,sample1_R2.fastq.gz&#10;Sample2,sample2_R1.fastq.gz,sample2_R2.fastq.gz" rows="5"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="bactopiaParams">Parâmetros Adicionais:</label>
+                    <div class="form-checkbox-container">
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="qc" checked>
+                            <span>Controle de Qualidade</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="assembly" checked>
+                            <span>Montagem de Genoma</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="annotation" checked>
+                            <span>Anotação</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="mlst" checked>
+                            <span>MLST</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="amr" checked>
+                            <span>Resistência Antimicrobiana</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">
+                    <i class="fas fa-cog"></i>
+                    Gerar Configuração Bactopia
+                </button>
+            </form>
+
+            <div id="bactopiaOutput" class="output-area" style="display: none;">
+                <!-- Bactopia configuration will be displayed here -->
+            </div>
+
+            <div id="bactopiaActions" style="display: none; margin-top: 1rem;">
+                <button class="btn btn-secondary" onclick="downloadBactopiaConfig()">
+                    <i class="fas fa-download"></i>
+                    Baixar Configuração
+                </button>
+                <button class="btn" onclick="generateBactopiaCommand()">
+                    <i class="fas fa-terminal"></i>
+                    Gerar Comando
+                </button>
+            </div>
         </div>
     </section>
-
 </main>
 
 <!-- Footer -->
